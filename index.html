@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-xVVam1KS4+Qt2OrFa+VdRUoXygyKIuNWUUUBZYv+n27STsJ7oDOHJgfF0bNKLMJF" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Arial Narrow';
+      background-color: rgb(34, 34, 34);
+    }
+
+    text {}
+
+    .enter {
+      fill: green;
+    }
+
+    .update {
+      fill: #333;
+    }
+
+    .exit {
+      fill: brown;
+    }
+
+    a {
+      color: rgb(215, 25, 32);
+      /* Official red accent */
+    }
+
+    .flex_container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .flex_title {
+      background-color: black;
+      color: white;
+      flex: 0 0 50px;
+      text-transform: uppercase;
+      padding: 5px;
+      font-size: 40px;
+      display: flex;
+      align-items: center;
+    }
+
+    .flex_subtitle {
+      background-color: #BCBBBA;
+      flex: 0 0 35px;
+      font-family: "Times New";
+      padding: 5px;
+      font-size: 15px;
+    }
+
+    .image-container {
+      flex: 1 1 0;
+      background-color: #636568;
+
+      /* Resize the background image to cover the entire container */
+    }
+
+    .flex_footer {
+      background-color: black;
+      flex: 0 0 35px;
+      color: white;
+      font-family: "Times New";
+      line-height: 35px;
+      padding: 5px;
+    }
+
+    .svgText {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .svg_container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .svg_content {
+      flex: 1 1 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flex_container" id="app">
+    <div class="flex_title">
+      <div>State Bridge Repair/Replacement Probabilities</div>
+    </div>
+    <div class="flex_subtitle">
+      <form>
+        Sort By:
+        <input type="radio" name="sort" value="name" onclick="handleradio(this)">Name</input>
+        <input type="radio" name="sort" value="max" onclick="handleradio(this)">Max</input>
+        <input type="radio" name="sort" value="avg" onclick="handleradio(this)">Mean</input>
+        <input type="radio" name="sort" value="threshold" onclick="handleradio(this)">Threshold (.003)</input>
+
+
+      </form>
+
+    </div>
+    <div class="image-container">
+
+      <div class="svg_container">
+        <svg style="width:100%;height:100%;background-color:#636568" id="mySVG">
+
+
+        </svg>
+      </div>
+    </div>
+    <div class="flex_footer">
+      Footer
+    </div>
+  </div>
+
+  <div id='app' style="background-color:white">
+
+  </div>
+
+  <script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js"
+    integrity="sha256-kzv+r6dLqmz7iYuR2OdwUgl4X5RVsoENBzigdF5cxtU=" crossorigin="anonymous"></script>
+
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script>
+
+    let data;
+    let maxValue = 0;
+    let minMax = 1;
+    let sortType = "name";
+
+    let boxSize = 80;
+    let viewBoxWidth = 800;
+    let viewBoxHeight = 800;
+    let boxMargin = 10;
+    let boxSizeWithMargin = boxSize + boxMargin * 2;
+
+    function resize()
+    {
+      console.log(window.innerWidth + ":" + window.innerHeight)
+      viewBoxWidth = window.innerWidth;
+      viewBoxHeight = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+
+
+    var svg = d3.select("svg")
+      .attr("preserveAspectRatio", "xMidYMid meet") //See https://stackoverflow.com/questions/16265123/resize-svg-when-window-is-resized-in-d3-js
+      .attr("viewBox", `0 0 ${viewBoxWidth} ${viewBoxHeight}`)
+      .attr("class", "svg_content"),
+      width = +svg.attr("width"),
+      height = +svg.attr("height");
+
+    var mGroup = svg.append("g").attr("class", "mGroup");
+
+
+    let iconLocations = ["fa-brands.svg", "light.svg", "regular.svg", "solid.svg"];
+
+
+    function update(data) {
+
+      function updateBoxLocation(data, i) {
+        let boxesPerColumn = Math.floor(viewBoxHeight / boxSizeWithMargin);
+        let column = Math.floor(i / boxesPerColumn);
+        let row = i % boxesPerColumn;
+
+        return `translate(${boxMargin + column * (boxSize + boxMargin)} ${boxMargin + row * (boxSize + boxMargin)})`;
+      }
+
+
+      // JOIN new data with old elements.
+      var g = mGroup.selectAll(".mainG")
+        .data(data, function (data) { return data.stateAbbr; });
+
+
+
+      // EXIT old elements not present in new data.
+      g.exit()
+        .remove();
+
+
+      // UPDATE old elements present in new data.
+      g.transition()
+        .duration(1500)
+        .attr("transform", updateBoxLocation)
+
+      // ENTER new elements present in new data.
+      var gEnter = g.enter().append("g");
+
+      gEnter
+        .attr("class", "mainG")
+        .attr("transform", updateBoxLocation)
+        .style("fill-opacity", 1e-6)
+
+      gEnter.transition()
+        .duration(750)
+        .style("fill-opacity", 1)
+
+
+
+
+      var gForRect = gEnter.append("g");
+      gForRect.attr("class", "gForRect");
+      var gForText = gEnter.append("g")
+      gForText.attr("class", "gForText");
+
+
+      let subText = gForText.append("text")
+        .attr("class", "subjClass")
+        .attr("x", "5")
+        .attr("y", "5")
+        .attr("alignment-baseline", "hanging")
+        .attr("fill", "black")
+        .attr("font-size", ".5rem")
+        .text(function (d) { return d.stateAbbr })
+
+
+
+      let enterRectangle = gForRect.append("rect")
+        .attr("x", "0")
+        .attr("y", "0")
+        .attr("width", boxSize)
+        .attr("height", boxSize)
+        .attr("fill", "white");
+
+
+      let sub = gEnter.selectAll(".years").data(function (data) { return data.entries });
+
+      let subEnter = sub.enter()
+        .append('g')
+        .attr("class", "years")
+        .attr("transform", function (d, i) {
+          return `translate(${i * boxSize / 96}, 30)`
+        });
+
+      let b = subEnter.selectAll('.entries').data(function (data) { return data });
+
+      var myColor = d3.scaleLinear()
+        .range(["red", "blue"])
+        .domain([0, maxValue])
+
+
+
+      b.enter()
+
+        .append('rect')
+        .attr("class", "entries")
+        .attr('x', '0')
+        .attr('y', function (d, i) { return (4-i) * (boxSize - 30) / 6 })
+        .attr('width', boxSize / 96)
+        .attr('height', (boxSize - 30) / 6)
+        .attr("fill", function (d) { return myColor(d); });
+
+
+    }
+
+
+
+    $.getJSON("./state.json", function (newData) {
+      data = newData;
+
+
+
+      for (let i = 0; i < data.length; i++) {
+        let state = data[i];
+        let stateMax = 0;
+        for (let j = 0; j < state.entries.length; j++) {
+          let entry = state.entries[j];
+          for (let k = 0; k < entry.length; k++) {
+            if (entry[k] > maxValue) {
+              maxValue = entry[k];
+              console.log(data[i].stateAbbr + " set a new max of " + maxValue);
+            }
+            if (k == 0 && entry[k] > stateMax) {
+              stateMax = entry[k];
+            }
+          }
+        }
+        if (stateMax < minMax) {
+          minMax = stateMax;
+          console.log(data[i].stateAbbr + " set a new min max of " + minMax);
+        }
+      }
+      console.log("max value is " + maxValue);
+      maxValue = .1;
+      updateData(data);
+
+    })
+
+    function maxEntry(array) {
+      let max = 0;
+      for (let i = 0; i < array.length; i++) {
+        if (array[i][0] > max)
+          max = array[i][0];
+      }
+      return max;
+    }
+
+    function avgEntry(array) {
+      let sum = 0;
+      for (let i = 0; i < array.length; i++) {
+        sum += array[i][0];
+      }
+      return sum / array.length;
+    }
+
+    function thresholdEntry(array) {
+      for (let i = 0; i < array.length; i++) {
+        if(array[i][0] >= 0.003395582470402392)
+          return array.length -1 - i;
+      }
+      return 0;
+
+    }
+
+    function updateData(data) {
+      if (sortType == "max") {
+        for (let i = 0; i < data.length; i++) {
+          data[i].max = maxEntry(data[i].entries);
+        }
+      }
+      if (sortType == "avg") {
+        for (let i = 0; i < data.length; i++) {
+          data[i].avg = avgEntry(data[i].entries);
+        }
+      }
+      if (sortType == "threshold") {
+        for (let i = 0; i < data.length; i++) {
+          data[i].threshold = thresholdEntry(data[i].entries);
+        }
+      }
+
+      if (sortType == "name")
+        data = data.sort((a, b) => a.stateAbbr.localeCompare(b.stateAbbr))
+      else {
+
+        data = data.sort((a, b) => a[sortType] - b[sortType])
+      }
+      update(data);
+    }
+
+
+    function handleradio(button) {
+      sortType = button.value;
+      updateData(data);
+
+    }
+
+
+
+
+
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="css/Map.css" />
+  <link rel="stylesheet" type="text/css" href="css/fontawesome.min.css" />
+  <title>State Bridge Repair</title>
+
+</head>
+<body>
+
+<div id="info-box"></div>
+<div class="header">
+  <h2 id="title">State Bridge Repair/Replacement Probabilities</h2>
+</div>
+<img src="Img/filter.svg" width="18" height="18" >
+  <select id="filter" onchange="filter(this)">
+    <option selected value="map">Map</option>
+    <option  value="name">Name</option>
+    <option value="avg">Average</option>
+    <option value="max">Max</option>
+    <option value="threshold">Threshold</option>
+  </select>
+  <span id="threshold" style="padding:0px;margin:0px;"hidden>
+  <input type="number"style="width:75px;" id="thresholdTxt" onchange="thresholdChanged(this)" step="0.001" value="0.003"/>
+  <button onclick="resetThreshold()" style="background: none!important;border: none;padding: 0!important;cursor: pointer;"><img src="Img/undo-alt.svg" width="15" height="15"></button>
+  </span>
+
+<svg x="0px" y="0px"  style="border:1px solid black;" id='us-map'>
+</svg>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js"
+  integrity="sha256-kzv+r6dLqmz7iYuR2OdwUgl4X5RVsoENBzigdF5cxtU=" crossorigin="anonymous"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3-scale-radial.js"></script>
+
+<script src="js/getData.js"></script>
+<script src="js/map.js"></script>
+</body>
+
+</html>
