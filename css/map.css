@@ -5,6 +5,9 @@
   font-size: 20px;
   font-family: Arial !important;
 }
+body {
+  overflow: hidden; 
+}
 
 .header
 {
@@ -66,4 +69,34 @@ td
   border-radius: 5px;
   padding: 5px;
   font-family: arial;
+}
+
+#custom-handle {
+  width: 30px;
+  height: 30px;
+  top: 50%;
+  margin-top: -.8em;
+  text-align: center;
+  line-height: 1.6em;
+}
+#slider
+{
+  margin: 10 30 0 10;
+  float: left;
+  width: 200px;
+  
+}
+#menuTable
+{
+  width: 100%;
+  height:35px;
+  
+}
+#customStandardDev
+{ 
+  float: left;
+  height: 30px;
+}
+td{
+  vertical-align:middle;
 }

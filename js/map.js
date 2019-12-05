@@ -1,6 +1,5 @@
 
 
-
 const EXPORT_MAP_COORDS = true;
 let bridgeData;
 let coordData;
@@ -17,8 +16,25 @@ let numOfBoxesPerRow = 6;
 let windowWidth = window.innerWidth;
 let windowHeight = window.innerHeight;
 let boxSize = 75;
-let coords =  [];
+let coords = [];
 let mapSvg = null;
+let standardDev = 0;
+let standardDevAvg = 0;
+let standardDevMulti = 2;
+let pieColor;
+
+String.prototype.hashCode = function() {
+  var hash = 0;
+  if (this.length == 0) {
+      return hash;
+  }
+  for (var i = 0; i < this.length; i++) {
+      var char = this.charCodeAt(i);
+      hash = ((hash<<5)-hash)+char;
+      hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
+}
 
 function resize()
 {
@@ -53,10 +69,15 @@ DATA.getCoords(function(data)
 {
   coordData = data;
 });
-DATA.getBridgeData(function(newData)
+
+DATA.getBridgeData(function(newData, standardDevData)
 {
+      standardDev = standardDevData.standardDev;
+      standardDevAvg = standardDevData.avg;  
 
-
+      CreateSlider( standardDevData.highestStandardDev);
+      ChangeStandardDevLabelValue();
+      SetPieColor();
       for (let i = 0; i < newData.length; i++) {
         let state = newData[i];
         let stateMax = 0;
@@ -85,17 +106,17 @@ DATA.getBridgeData(function(newData)
 
 
     function update(data) {
-
+  
       function translateHexes(data, i) {
-        let listStart = {x: 500, y: 100};
+        let listStart = {x: 400, y: 100};
 
         let column = Math.floor(i / 9);
         let row = (i % 9);
 
-        let coord = coordData.find(c => c.state == data.stateAbbr);
-        let disX =  listStart.x - coord.coord[0];
-        let disY =  listStart.y - coord.coord[1];
-
+        let coord =  getCoord(data);
+        let disX =  listStart.x - coord[0];
+        let disY =  listStart.y - coord[1]; 
+        
         if (viewMap)
         {
           return `translate(0 0)`;
@@ -137,14 +158,19 @@ DATA.getBridgeData(function(newData)
           .attr("transform", translateHexes)
 
 
-        function getPath(data, i, scale)
+        function getPath(data, i, scale, test)
         {
           if (scale == undefined) scale = 1;
-          let coord = coordData.find(c => c.state == data.stateAbbr);
+          let coord = getCoord(data);
           let hexSize = boxSize * scale;
 
-          let x = coord.coord[0] + ((scale < 1) ? (boxSize / 2) * (1 - scale) : 0);
-          let y = coord.coord[1] + ((scale < 1) ? (boxSize / 2) * (1 - scale) : 0);
+          let x = coord[0] + ((scale < 1) ? (boxSize / 2) * (1 - scale) : 0);
+          let y = coord[1] + ((scale < 1) ? (boxSize / 2) * (1 - scale) : 0);
+          if (test) 
+          {
+            x = -boxSize / 2;
+            y = -boxSize / 2;
+          }
           let hexagon = [
              [x + hexSize / 2, y],
              [x + hexSize, y + hexSize * (1 - (Math.sqrt(3) / 2))],
@@ -158,54 +184,84 @@ DATA.getBridgeData(function(newData)
           let path = lineGenerator(hexagon);
           return path;
         }
-
-
-
-        /*gEnter.append("rect")
-        .attr("fill", "none")
-        .attr("stroke", "black")
-        .attr("x", function(d) {return d.coord[0]})
-        .attr("y", function(d) {return d.coord[1]})
-        .attr("width", boxSize)
-        .attr("height", boxSize);*/
-
-       gEnter.append("path")
-        .attr("stroke", "white")
-        .attr("stroke-width", 2)
-        .attr("fill", "#69a2a2")
+    
+      let boundBox = gEnter
+        .append("clipPath")
+        .attr("id", function(data)
+        {
+           let ret = "boundBox" + JSON.stringify(data).hashCode();
+          //console.log(ret);
+           return ret;
+        })
+        .append("path")
         .attr("d", function(data, i)
-      {
-        return getPath(data, i);
-      });
+        {
+        return getPath(data, i, 1, true);
+       })
 
-      /*gEnter.append("path")
-       .attr("stroke-width", 2)
-       .attr("fill", "gray")
-       .attr("d", function(data, i)
-     {
-       return getPath(data, i, 0.70)
-     });
-*/
+     let pieRadius = boxSize / 1.3;
+     
 
-var arcGenerator = d3.arc();
+    /* var pieColor  = d3.scaleQuantize()
+    .domain([0, 0.02])
+    .range(["rgb(0, 0, 255)", "rgb(50, 0, 205)", "rgb(100, 0, 155)", "rgb(150, 0, 105)", "rgb(200, 0, 55)", "rgb(255, 0, 0)"]);
+*/ 
+    var arc = d3.arc()
+    .outerRadius(pieRadius - 10)
+    .innerRadius(0);
 
-var arcGen = arcGenerator({
-  startAngle: 0,
-  endAngle: 0.25 * Math.PI,
-  innerRadius: 50,
-  outerRadius: 100
-});
-  gEnter.selectAll('.years').data(arcGen);
-gEnter.append('path').attr('class', 'years');
+    var pie = d3.pie()
+    .sort(null)
+    .value(function(d) { return d; });
+
+    var pieChart = gEnter
+    .append("g")
+    .attr("transform", function(data, i)
+    {
+      let coord = getCoord(data);
+      return `translate(${coord[0] + boxSize / 2}, ${coord[1] + boxSize / 2})`
+    })
+    .attr("clip-path", function(data)
+    {
+      let ret = "boundBox" + JSON.stringify(data).hashCode();
+      
+       return `url('#${ret}')`;
+    })
+    
+    var g = pieChart.selectAll(".arc")
+      .data(function(data, i)    {
+      let mapped = mapData(data.entries);
+      console.log(mapped);
+      return pie(mapped)
+    })
+    .enter().append("g")
+      .attr("class", "arc")
+    
+
+    g.append("path")
+      .attr("class", "slice")
+      .attr("d", arc)
+ 
+    FillPieChart();
+    
+  
+      gEnter.append("path")
+      .attr("fill", "#588d8d")
+      .attr("d", function(data, i)
+    {
+      return getPath(data, i, 0.8);
+    });
+
+      gEnter.append('path').attr('class', 'years');
         gEnter
         .append("text")
         .attr("x", function(d) {
-          let coord = coordData.find(c => c.state == d.stateAbbr);
-          return coord.coord[0] + boxSize / 2;
+          let coord = getCoord(d);
+          return coord[0] + boxSize / 2;
         })
         .attr("y", function(d) {
-          let coord = coordData.find(c => c.state == d.stateAbbr);
-        return coord.coord[1] + boxSize / 2;
+          let coord = getCoord(d);
+        return coord[1] + boxSize / 2;
       })
           .text(function (d) {return d.stateAbbr;})
           .attr("text-anchor", "middle")
@@ -213,11 +269,21 @@ gEnter.append('path').attr('class', 'years');
           .style("font-size", 20)
           .style("fill", "white")
 
-
-
+      
+      
+      function getCoord(data)
+      {
+        return coordData.find(c => c.state == data.stateAbbr).coord;
+      }  
+      function mapData(entries)
+      {
+          return entries.map(x => x[0]);
+      }
+      
+     
     }
-
-
+   
+ 
     function maxEntry(array) {
       let max = 0;
       for (let i = 0; i < array.length; i++) {
@@ -248,7 +314,6 @@ gEnter.append('path').attr('class', 'years');
 
       if (sortType == "max") {
         for (let i = 0; i < data.length; i++) {
-          //console.log(maxEntry(data[i].entries));
           data[i].max = maxEntry(data[i].entries);
         }
       }
@@ -282,7 +347,7 @@ gEnter.append('path').attr('class', 'years');
         $("#threshold").attr("hidden", false);
       }
       else
-      {
+      {  
         $("#threshold").attr("hidden", true);
       }
       updateData(bridgeData);
@@ -296,9 +361,70 @@ gEnter.append('path').attr('class', 'years');
         updateData(bridgeData);
       }
     }
+    function getMaxStandardDev()
+    {
+      return 5;
+    }
+    function standardDevChanged(value)
+    {
+      standardDevMulti = value;
+      ChangeStandardDevLabelValue();
+      SetPieColor();
+      FillPieChart();
+    }
+    function customStandardDeviation(check)
+    {
+      $("#standardDev").attr("hidden", !check.checked)
+      if (check.checked == false) 
+      {
+        standardDevChanged(2);
+        $("#slider").slider('option', "value", 2);
+        $( "#custom-handle" ).text("2");
+      }
+    }
+     function ChangeStandardDevLabelValue()
+     {
+          
+        $("#standardDevLabel").html("Standard Deviation: " + standardDevMulti);
+     }
+      function FillPieChart()
+      {
+        d3.selectAll(".slice").attr("fill", function(d) {  
+          return pieColor(d.data); 
+        });
+      }
+     function SetPieColor()
+     { 
+       pieColor = d3.scaleSequential()
+      .interpolator(d3.interpolateInferno)
+      //.domain([Math.min(...mapped), Math.max(...mapped)]);
+      .domain([0, standardDevAvg + (standardDevMulti * standardDev)])
+    
+     }
     function resetThreshold()
     {
       currentThreshHold = 0.003;
       $("#thresholdTxt").val(0.003);
       updateData(bridgeData);
     }
+  
+  function CreateSlider(max)
+  {
+    var handle = $( "#custom-handle" );
+     $( "#slider" ).slider({
+      range: "max",
+      min: 1,
+      max: max,
+      value: 2, 
+      create: function() {
+        handle.text( $( this ).slider( "value" ) );
+      },
+      slide: function( event, ui ) {
+        handle.text( ui.value );
+        standardDevChanged(ui.value);
+      }
+    });
+  }
+    $( function() {
+      $("#customStandardDev").checkboxradio();
+    });
