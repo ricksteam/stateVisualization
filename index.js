@@ -1,5 +1,4 @@
-const fs = require("fs");
-
+const fs = require("fs"); 
 fs.readdir("./StateProbabilitiesCSV", (err, allFiles)=>{
   if(err)
     return console.log("Error reading directory " + err);
@@ -28,8 +27,5 @@ fs.readdir("./StateProbabilitiesCSV", (err, allFiles)=>{
     }
     allData.push(thisState);
   }
-
-  //console.log(JSON.stringify(allData, null, 2));
   fs.writeFileSync("state.json", JSON.stringify(allData, null, 2));
-
 })

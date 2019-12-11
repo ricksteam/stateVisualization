@@ -108,7 +108,7 @@ DATA.getBridgeData(function(newData, standardDevData)
     function update(data) {
   
       function translateHexes(data, i) {
-        let listStart = {x: 400, y: 100};
+        let listStart = {x: 350, y: 100};
 
         let column = Math.floor(i / 9);
         let row = (i % 9);
@@ -231,7 +231,7 @@ DATA.getBridgeData(function(newData, standardDevData)
     var g = pieChart.selectAll(".arc")
       .data(function(data, i)    {
       let mapped = mapData(data.entries);
-      console.log(mapped);
+      //console.log(mapped);
       return pie(mapped)
     })
     .enter().append("g")

@@ -1,8 +1,0 @@
-{
-  "name": "probabilities",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "https://github.com/bricksphd/stateProbabilities.git",
-  "author": "B Ricks <bricks@unomaha.edu>",
-  "license": "MIT"
-}

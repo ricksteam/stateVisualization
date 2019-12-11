@@ -1,9 +1,15 @@
+
 let DATA = {};
 
 DATA.getCoords = function(cb)
 {
       $.getJSON("./js/coords.json", function(data)
       {
+        data.coord = data.map ((d) =>
+        {
+          d.coord[0] -= 200;
+          d.coord[1] -= 50;
+        })
         cb (data);
       });
 }
@@ -39,4 +45,5 @@ function getStandardDeviation(entries, avg)
     });
   let squareDiffAvg = getAverage(squareDiffs);
   return Math.sqrt(squareDiffAvg);
-}
+} 
+
