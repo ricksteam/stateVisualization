@@ -267,9 +267,9 @@ DATA.getBridgeData(function(newData, standardDevData)
           .attr("text-anchor", "middle")
           .attr("alignment-baseline", "central")
           .style("font-size", 20)
-          .style("fill", "white")
+          .style("fill", "white");
 
-      
+
       
       function getCoord(data)
       {
@@ -400,7 +400,30 @@ DATA.getBridgeData(function(newData, standardDevData)
       //.domain([Math.min(...mapped), Math.max(...mapped)]);
       .domain([0, standardDevAvg + (standardDevMulti * standardDev)])
     
+      UpdateLegend();
      }
+    function UpdateLegend()
+    {
+      mapSvg.append("g")
+      .attr("class", "legend")
+      .attr("transform", "translate(20,20)");
+  
+  var legendSequential = d3.legendColor()
+     .labelFormat(d3.format(".3f"))
+      .labels(function({i, genLength, generatedLabels, labelDelimiter}) {
+        //Was planning on multiplying it by 100 but I'm not sure if you want that.
+        return generatedLabels[i];
+
+      })
+      .shapeWidth(30)
+      .cells(20)
+      .orient("vertical")
+      .scale(pieColor)
+     
+  
+  mapSvg.select(".legend")
+    .call(legendSequential);
+    }
     function resetThreshold()
     {
       currentThreshHold = 0.003;
