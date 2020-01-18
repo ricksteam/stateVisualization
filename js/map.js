@@ -22,6 +22,7 @@ let standardDev = 0;
 let standardDevAvg = 0;
 let standardDevMulti = 2;
 let pieColor;
+let pieColorInverse;
 
 String.prototype.hashCode = function() {
   var hash = 0;
@@ -391,18 +392,23 @@ DATA.getBridgeData(function(newData, standardDevData)
       {
         d3.selectAll(".slice").attr("fill", function(d) {  
           return pieColor(d.data); 
+        })
+        .attr("id", function(d)
+        {
+          return "cell_" + (d.data * 100).toFixed(2);
         });
       }
      function SetPieColor()
      { 
+       let colors = ["#000000", "#ffff32"];
        pieColor = d3.scaleSequential()
       .interpolator(d3.interpolateInferno)
       //.domain([Math.min(...mapped), Math.max(...mapped)]);
       .domain([0, standardDevAvg + (standardDevMulti * standardDev)])
-    
       UpdateLegend();
      }
-    function UpdateLegend()
+
+   function UpdateLegend()
     {
       mapSvg.append("g")
       .attr("class", "legend")
@@ -412,13 +418,14 @@ DATA.getBridgeData(function(newData, standardDevData)
      .labelFormat(d3.format(".3f"))
       .labels(function({i, genLength, generatedLabels, labelDelimiter}) {
         //Was planning on multiplying it by 100 but I'm not sure if you want that.
-        return generatedLabels[i];
+        return (generatedLabels[i] * 100).toFixed(2);;
 
       })
       .shapeWidth(30)
       .cells(20)
       .orient("vertical")
       .scale(pieColor)
+      .on("cellover", function(d){LegendCellMouseOver(d)});
      
   
   mapSvg.select(".legend")
@@ -430,7 +437,34 @@ DATA.getBridgeData(function(newData, standardDevData)
       $("#thresholdTxt").val(0.003);
       updateData(bridgeData);
     }
+  function LegendCellMouseOver(d)
+  {
+    let color = pieColor(d);
+    let slices = GetAllSlicesByColor(color);
+    console.log(slices);
+
+    
+  }
+  function GetAllSlicesByColor(col)
+  {
+    let slices = d3.selectAll('.slice');
+    let groups = slices._groups[0];
+    let list = [];
+    for (var g in groups)
+    {
+      let el = d3.select(groups[g])
+      if (el == undefined) continue;
+      //Commentted stuff throws error. Still working on it 
+     /* let fill = el.style("fill");
+      if (fill == col)
+      {
+        list.push(el);
+        
+      }*/
   
+    }
+    return list;
+  }
   function CreateSlider(max)
   {
     var handle = $( "#custom-handle" );
