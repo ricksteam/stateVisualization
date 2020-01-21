@@ -21,9 +21,9 @@ let mapSvg = null;
 let standardDev = 0;
 let standardDevAvg = 0;
 let standardDevMulti = 2;
-let pieColor;
-let pieColorInverse;
-
+let pieColor; 
+let cellHover = {};
+let isHover = false;
 String.prototype.hashCode = function() {
   var hash = 0;
   if (this.length == 0) {
@@ -391,21 +391,40 @@ DATA.getBridgeData(function(newData, standardDevData)
       function FillPieChart()
       {
         d3.selectAll(".slice").attr("fill", function(d) {  
-          return pieColor(d.data); 
+          if (isHover)
+          {
+            if (pieColor(d.data) != cellHover.color)
+            {
+              return "#588d8d";
+            }
+            else
+            {
+              return pieColor(d.data);
+            }
+            
+          }
+          else
+          {
+            return pieColor(d.data);
+          }
+         
+
+          
         })
-        .attr("id", function(d)
-        {
-          return "cell_" + (d.data * 100).toFixed(2);
-        });
       }
      function SetPieColor()
      { 
-       let colors = ["#000000", "#ffff32"];
-       pieColor = d3.scaleSequential()
-      .interpolator(d3.interpolateInferno)
-      //.domain([Math.min(...mapped), Math.max(...mapped)]);
-      .domain([0, standardDevAvg + (standardDevMulti * standardDev)])
-      UpdateLegend();
+
+          let colors = ["#000000", "#ffff32"];
+          let snd = standardDevAvg + (standardDevMulti * standardDev);
+          pieColor = d3.scaleSequential()
+         .interpolator(d3.interpolateInferno)
+         //.domain([Math.min(...mapped), Math.max(...mapped)]);
+         .domain([0, snd])
+           
+        UpdateLegend();
+        
+  
      }
 
    function UpdateLegend()
@@ -419,16 +438,16 @@ DATA.getBridgeData(function(newData, standardDevData)
       .labels(function({i, genLength, generatedLabels, labelDelimiter}) {
         //Was planning on multiplying it by 100 but I'm not sure if you want that.
         return (generatedLabels[i] * 100).toFixed(2);;
-
+      
       })
       .shapeWidth(30)
       .cells(20)
       .orient("vertical")
       .scale(pieColor)
-      .on("cellover", function(d){LegendCellMouseOver(d)});
-     
+      .on("cellover", function(d){LegendCellMouseOver(d)})
+      .on("cellout", function(d){LegendCellMouseExit(d)});
   
-  mapSvg.select(".legend")
+    mapSvg.select(".legend")
     .call(legendSequential);
     }
     function resetThreshold()
@@ -440,31 +459,23 @@ DATA.getBridgeData(function(newData, standardDevData)
   function LegendCellMouseOver(d)
   {
     let color = pieColor(d);
-    let slices = GetAllSlicesByColor(color);
-    console.log(slices);
-
-    
-  }
-  function GetAllSlicesByColor(col)
-  {
-    let slices = d3.selectAll('.slice');
-    let groups = slices._groups[0];
-    let list = [];
-    for (var g in groups)
-    {
-      let el = d3.select(groups[g])
-      if (el == undefined) continue;
-      //Commentted stuff throws error. Still working on it 
-     /* let fill = el.style("fill");
-      if (fill == col)
-      {
-        list.push(el);
-        
-      }*/
+    cellHover.color = color; 
+    cellHover.value = d;
+    console.log(cellHover.color); 
+    isHover = true;
+    FillPieChart();
   
-    }
-    return list;
   }
+  function LegendCellMouseExit(d)
+  {
+    cellHover.color = null; 
+    cellHover.value = null;
+    console.log(cellHover.color);
+    isHover = false;
+    FillPieChart();
+  }
+
+
   function CreateSlider(max)
   {
     var handle = $( "#custom-handle" );
