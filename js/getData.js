@@ -1,10 +1,16 @@
 
 let DATA = {};
 
+/**
+ * getCoords
+ *  @param cb the callback function that returns the data
+ * Returns the browser coordinates for each state that d3 can then draw accordingly
+ */
 DATA.getCoords = function(cb)
 {
       $.getJSON("./js/coords.json", function(data)
       {
+        //Shifts the coordinates to be more centered
         data.coord = data.map ((d) =>
         {
           d.coord[0] -= 200;
@@ -13,6 +19,13 @@ DATA.getCoords = function(cb)
         cb (data);
       });
 }
+
+/**
+ * getBridgeData
+ * @param cb the callback function that returns the data
+ * Gets the bridge data that sorts the hexes. This is the data that apprears around the edge and in the legend. 
+ * Also computes the a standardDeviation, average, and highestStandardDeviation for later calculations
+ */
 DATA.getBridgeData = function(cb)
 {
       $.getJSON("./state.json", function(data)
@@ -26,6 +39,11 @@ DATA.getBridgeData = function(cb)
       });
 }
 
+/**
+ * getAverage
+ * @param entries represents a list of floats (recieved from bridgeData)
+ * returns the average values of all values in the entries array
+ */
 function getAverage(entries)
 {
   let sum = 0;
@@ -33,6 +51,12 @@ function getAverage(entries)
   return sum / entries.length;
 }
 
+/**
+ * getStandardDeviation
+ * @param entries represents a list of floats (recieved from getBridgeData)
+ * @param avg the average value of all the bridge data values (recieved from getAverage)
+ * Calculates standard deviation for bridge average
+ */
 function getStandardDeviation(entries, avg)
 {
 

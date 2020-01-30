@@ -1,20 +1,18 @@
-
-
-const EXPORT_MAP_COORDS = true;
-let bridgeData;
-let coordData;
+let bridgeData; //Represents probability of bridge repair over time
+let coordData; //The coordinates in localspace for each space
 let maxValue = 0;
 let minMax = 1;
-let sortType = "map";
+let sortType = "map"; 
 let viewMap = true;
 let currentThreshHold = 0.003;
-let mapCoords;
+//aspect ratio and balance variables
 let aspectRatio = 0;
 let viewBoxWidth = 750;
 let viewBoxHeight = 750;
 let numOfBoxesPerRow = 6;
 let windowWidth = window.innerWidth;
 let windowHeight = window.innerHeight;
+
 let boxSize = 75;
 let coords = [];
 let mapSvg = null;
@@ -22,8 +20,13 @@ let standardDev = 0;
 let standardDevAvg = 0;
 let standardDevMulti = 2;
 let pieColor; 
-let cellHover = {};
+let cellHover = {}; //data for the current cell the mouse is over
 let isHover = false;
+
+/**
+ * hashCode
+ * Generates a unique hash based on the string it was called on. This is used to randomize the id names
+ */
 String.prototype.hashCode = function() {
   var hash = 0;
   if (this.length == 0) {
@@ -37,6 +40,10 @@ String.prototype.hashCode = function() {
   return hash;
 }
 
+/**
+ * resize
+ * Makes sure the aspect ratio remains the same during browser resize
+ */
 function resize()
 {
   console.log(window.innerWidth + ":" + window.innerHeight)
@@ -54,7 +61,7 @@ resize();
 window.addEventListener('resize', resize);
 
 
-
+//D3 Setup
  mapSvg = d3.select("#us-map")
 .attr("preserveAspectRatio", "xMinYMin meet")
 .attr("width", windowWidth)
@@ -65,20 +72,21 @@ window.addEventListener('resize', resize);
     height = +mapSvg.attr("height");
 
 
-//Get Data from JSON
+//Get Coordinates from JSON
 DATA.getCoords(function(data)
 {
   coordData = data;
 });
-
+//Get Bridge data from JSON and calculate standard deviation
 DATA.getBridgeData(function(newData, standardDevData)
 {
       standardDev = standardDevData.standardDev;
       standardDevAvg = standardDevData.avg;  
 
-      CreateSlider( standardDevData.highestStandardDev);
-      ChangeStandardDevLabelValue();
-      SetPieColor();
+      CreateSlider(standardDevData.highestStandardDev); //setup slider values
+      ChangeStandardDevLabelValue(); //Setup slider text
+      SetPieColor(); //Set the color scale that will be used to represent bridge data
+
       for (let i = 0; i < newData.length; i++) {
         let state = newData[i];
         let stateMax = 0;
@@ -107,7 +115,13 @@ DATA.getBridgeData(function(newData, standardDevData)
 
 
     function update(data) {
-  
+      
+      /**
+       * translateHexes
+       * @param data the bridge data list  
+       * @param i Current index in data 
+       * Translates the hexes from a map postion to a list position 
+       */
       function translateHexes(data, i) {
         let listStart = {x: 350, y: 100};
 
@@ -130,8 +144,6 @@ DATA.getBridgeData(function(newData, standardDevData)
 
       }
 
-
-      // JOIN new data with old elements.
 
       // JOIN new data with old elements.
       var g = mapSvg.selectAll(".states")
@@ -158,8 +170,14 @@ DATA.getBridgeData(function(newData, standardDevData)
           .duration(1500)
           .attr("transform", translateHexes)
 
-
-        function getPath(data, i, scale, test)
+        /**
+         * 
+         * @param data the bridge data
+         * @param i current index in data
+         * @param scale the scale of the hexes (default is 1 (100%) or normal scale)
+         * @param offset a balance variable. if we are in the list form...offset the coords so it fits nicely
+         */
+        function getPath(data, i, scale, offset)
         {
           if (scale == undefined) scale = 1;
           let coord = getCoord(data);
@@ -167,7 +185,7 @@ DATA.getBridgeData(function(newData, standardDevData)
 
           let x = coord[0] + ((scale < 1) ? (boxSize / 2) * (1 - scale) : 0);
           let y = coord[1] + ((scale < 1) ? (boxSize / 2) * (1 - scale) : 0);
-          if (test) 
+          if (offset) 
           {
             x = -boxSize / 2;
             y = -boxSize / 2;
@@ -191,7 +209,6 @@ DATA.getBridgeData(function(newData, standardDevData)
         .attr("id", function(data)
         {
            let ret = "boundBox" + JSON.stringify(data).hashCode();
-          //console.log(ret);
            return ret;
         })
         .append("path")
@@ -200,13 +217,9 @@ DATA.getBridgeData(function(newData, standardDevData)
         return getPath(data, i, 1, true);
        })
 
+      // Create Pie Chart
      let pieRadius = boxSize / 1.3;
      
-
-    /* var pieColor  = d3.scaleQuantize()
-    .domain([0, 0.02])
-    .range(["rgb(0, 0, 255)", "rgb(50, 0, 205)", "rgb(100, 0, 155)", "rgb(150, 0, 105)", "rgb(200, 0, 55)", "rgb(255, 0, 0)"]);
-*/ 
     var arc = d3.arc()
     .outerRadius(pieRadius - 10)
     .innerRadius(0);
@@ -252,7 +265,8 @@ DATA.getBridgeData(function(newData, standardDevData)
     {
       return getPath(data, i, 0.8);
     });
-
+    
+    //the state text in the hexes
       gEnter.append('path').attr('class', 'years');
         gEnter
         .append("text")
@@ -271,11 +285,20 @@ DATA.getBridgeData(function(newData, standardDevData)
           .style("fill", "white");
 
 
-      
+      /**
+       * getCoord
+       * @param data the bridge data list
+       * Takes the bridge data list and returns the corisponding coord data
+       */
       function getCoord(data)
       {
         return coordData.find(c => c.state == data.stateAbbr).coord;
       }  
+      /**
+       * mapData
+       * @param entries the bridge data list
+       * thats the bridge data list and maps it to only the first value of the 5 years to make it more accurate.
+       */
       function mapData(entries)
       {
           return entries.map(x => x[0]);
@@ -284,7 +307,11 @@ DATA.getBridgeData(function(newData, standardDevData)
      
     }
    
- 
+    /**
+     * maxEntry 
+     * @param array The bridge data array
+     * returns the max entry...used for sorting by max
+     */
     function maxEntry(array) {
       let max = 0;
       for (let i = 0; i < array.length; i++) {
@@ -294,6 +321,11 @@ DATA.getBridgeData(function(newData, standardDevData)
       return max;
     }
 
+    /**
+     * avgEntry 
+     * @param array The bridge data array
+     * returns the average entry...used for sorting by average
+     */
     function avgEntry(array) {
       let sum = 0;
       for (let i = 0; i < array.length; i++) {
@@ -302,6 +334,11 @@ DATA.getBridgeData(function(newData, standardDevData)
       return sum / array.length;
     }
 
+     /**
+     * thresholdEntry 
+     * @param array The bridge data array
+     * returns the entry based on the given threshold variable (number picker UI element)...used for sorting 
+     */
     function thresholdEntry(array) {
       for (let i = 0; i < array.length; i++) {
         if(array[i][0] >= currentThreshHold)
@@ -310,7 +347,12 @@ DATA.getBridgeData(function(newData, standardDevData)
       return 0;
 
     }
-
+    /**
+     * updateData
+     * @param data  The bridge data array
+     * Updates the data based on the current sort type (keep in mind. "Map" is not a sort type in this function. This only refers to data and not appearance)
+     * Sort types: Max, Average, Name, Threshold
+     */
     function updateData(data) {
 
       if (sortType == "max") {
@@ -339,6 +381,12 @@ DATA.getBridgeData(function(newData, standardDevData)
       bridgeData = data;
       update(bridgeData);
     }
+
+    /**
+     * filter
+     * @param select the select DOM element 
+     * called from the onchange action in the sorting select element
+     */
     function filter (select) {
       console.log("SELECT VAL: " + select.value);
       sortType = select.value;
@@ -353,7 +401,13 @@ DATA.getBridgeData(function(newData, standardDevData)
       }
       updateData(bridgeData);
 
-    }
+    } 
+
+    /**
+     * thresholdChanged
+     * @param text the number picker DOM element
+     * updates the threshold whenever the number picker (threshold representation) is updated
+     */
     function thresholdChanged(text)
     {
       if (!isNaN(text.value))
@@ -362,10 +416,12 @@ DATA.getBridgeData(function(newData, standardDevData)
         updateData(bridgeData);
       }
     }
-    function getMaxStandardDev()
-    {
-      return 5;
-    }
+
+      /**
+     * standardDevChanged
+     * @param value the slider DOM element
+     * updates the standarddeviation whenever the slider is updated
+     */
     function standardDevChanged(value)
     {
       standardDevMulti = value;
@@ -373,21 +429,38 @@ DATA.getBridgeData(function(newData, standardDevData)
       SetPieColor();
       FillPieChart();
     }
+     
+    /**
+     * customStandardDeviation
+     * @param check the checkbox DOM element
+     * hides and spawns the slider based on checkbox value. if it is not check value is reset to 2
+     */
     function customStandardDeviation(check)
     {
       $("#standardDev").attr("hidden", !check.checked)
       if (check.checked == false) 
       {
-        standardDevChanged(2);
+        standardDevChanged(2);  
         $("#slider").slider('option', "value", 2);
         $( "#custom-handle" ).text("2");
       }
     }
+    
+    /**
+     * ChangeStandardDevLabelValue
+     * Changes the lable value for standard deviation next to the slider
+     */
      function ChangeStandardDevLabelValue()
      {
           
         $("#standardDevLabel").html("Standard Deviation: " + standardDevMulti);
      }
+
+    /**
+     * FillPieChart
+     * Fills the pie chart with the appropiate color whenever the standarddeviation is updated the value in the color scale is as well.
+     * Also handles color change on legend hover
+     */
       function FillPieChart()
       {
         d3.selectAll(".slice").attr("fill", function(d) {  
@@ -406,12 +479,14 @@ DATA.getBridgeData(function(newData, standardDevData)
           else
           {
             return pieColor(d.data);
-          }
-         
-
-          
+          }    
         })
       }
+
+      /**
+       * Sets the global variable pieColor based on the standarddevation
+       * The color is based on d3 color scaleSequential (interpolateInferno)
+       */
      function SetPieColor()
      { 
 
@@ -423,10 +498,13 @@ DATA.getBridgeData(function(newData, standardDevData)
          .domain([0, snd])
            
         UpdateLegend();
-        
   
      }
 
+     /**
+      * UpdateLegend
+      * Creates the legend using d3-legend library. 
+      */
    function UpdateLegend()
     {
       mapSvg.append("g")
@@ -450,12 +528,22 @@ DATA.getBridgeData(function(newData, standardDevData)
     mapSvg.select(".legend")
     .call(legendSequential);
     }
+
+     /**
+    * ResetThreshold
+    * Resets the threshold when the checkbox is unchecked
+    */
     function resetThreshold()
     {
       currentThreshHold = 0.003;
       $("#thresholdTxt").val(0.003);
       updateData(bridgeData);
     }
+
+    /**
+ * LegendCellMouseOver
+ * called when mouse enter a legend cell
+ */
   function LegendCellMouseOver(d)
   {
     let color = pieColor(d);
@@ -466,7 +554,12 @@ DATA.getBridgeData(function(newData, standardDevData)
     FillPieChart();
   
   }
-  function LegendCellMouseExit(d)
+
+/**
+ * LegendCellMouseExit
+ * called when mouse leaves a legend cell
+ */
+  function LegendCellMouseExit()
   {
     cellHover.color = null; 
     cellHover.value = null;
@@ -475,7 +568,11 @@ DATA.getBridgeData(function(newData, standardDevData)
     FillPieChart();
   }
 
-
+  /**
+   * CreateSlider 
+   * @param max the max value the slider can have
+   * Creates the slider and checkbox...needs to be instantiated because values are determined on standarddeviation
+   */
   function CreateSlider(max)
   {
     var handle = $( "#custom-handle" );
