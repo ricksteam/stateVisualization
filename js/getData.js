@@ -38,7 +38,18 @@ DATA.getBridgeData = function(cb)
         cb (data, {standardDev: standardDev, avg: avg, highestStandardDev: highestStandardDev});
       });
 }
-
+/**
+ * getCenterData
+ * @param cb the callback function that returns the data
+ * Gets the center data that updates color in center of hexes.  
+ */
+DATA.getCenterData = function(cb)
+{
+      $.getJSON("./centerData.json", function(data)
+      {
+        cb (data);
+      });
+}
 /**
  * getAverage
  * @param entries represents a list of floats (recieved from bridgeData)
