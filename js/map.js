@@ -28,12 +28,14 @@ let isHover = false;
 let CenterMin = {
   Density: Number.POSITIVE_INFINITY,
   Population: Number.POSITIVE_INFINITY,
-  Vehicle_Reg: Number.POSITIVE_INFINITY
+  Vehicle_Reg: Number.POSITIVE_INFINITY,
+  LandArea: Number.POSITIVE_INFINITY,
 };
 let CenterMax = {
   Density: Number.NEGATIVE_INFINITY,
   Population: Number.NEGATIVE_INFINITY,
-  Vehicle_Reg: Number.NEGATIVE_INFINITY
+  Vehicle_Reg: Number.NEGATIVE_INFINITY,
+  LandArea: Number.NEGATIVE_INFINITY,
 };
 let legendLeniency;
 let legendCount = 20;
@@ -373,6 +375,8 @@ function getCenterValueEntry(entry)
       return ste.Pop;
     case "veh_reg":
       return (ste.trucks_registered + ste.cars_registered)
+    case "LandArea":
+      return ste.LandArea;
   }
   
 }
@@ -545,6 +549,9 @@ function FillCenter() {
         console.log(CenterMin.Vehicle_Reg, CenterMax.Vehicle_Reg)
         return centerColor(veh_reg)
         break;
+      case "LandArea":
+        SetCenterColor(CenterMin.LandArea, CenterMax.LandArea);
+        return centerColor(ste.LandArea);
     }
 
   })
@@ -672,11 +679,12 @@ function SetCenterMinMax() {
     if (x.Density > CenterMax.Density) CenterMax.Density = x.Density;
     if (x.Pop > CenterMax.Population) CenterMax.Population = x.Pop;
     if ((x.trucks_registered + x.cars_registered) > CenterMax.Vehicle_Reg) CenterMax.Vehicle_Reg = (x.trucks_registered + x.cars_registered);
-
+    if (x.LandArea > CenterMax.LandArea) CenterMax.LandArea = x.LandArea;
     // Min
     if (x.Density < CenterMin.Density) CenterMin.Density = x.Density;
     if (x.Pop < CenterMin.Population) CenterMin.Population = x.Pop;
     if ((x.trucks_registered + x.cars_registered) < CenterMin.Vehicle_Reg) CenterMin.Vehicle_Reg = (x.trucks_registered + x.cars_registered);
+    if (x.LandArea < CenterMin.LandArea) CenterMin.LandArea = x.LandArea;
 
   });
 

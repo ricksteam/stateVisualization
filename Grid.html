@@ -1,95 +1,102 @@
 <html>
+
 <head>
-  <link rel="shortcut icon" type="image/png" href="favicon/favicon.png"/>
+  <link rel="shortcut icon" type="image/png" href="favicon/favicon.png" />
   <link rel="stylesheet" type="text/css" href="css/map.css" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" type="text/css" href="css/fontawesome.min.css" />
   <title>State Bridge Repair</title>
 
 </head>
+
 <body>
 
-<div id="info-box"></div>
-<div class="header">
-  <h2 id="title">State Bridge Repair/Replacement Probabilities</h2>
-</div>
-<table id="menuTable">
-  <colgroup>
-    <col style="width: 25%;" />
-    <col style="width: 85%; " />
-  </colgroup>
-  <tr>
-    <td>
-      <img src="Img/filter.svg" style="padding-left: 5px;" width="18" height="18" >
-      <select id="filter" onchange="filter(this)">
-        <option selected value="map">Map</option>
-        <option  value="name">Name</option>
-        <option value="avg">Average</option>
-        <option value="max">Max</option>
-        <option value="threshold">Threshold</option>
-        <option value="centerValue">Center Value</option>
-      </select>
-      <img src="Img/filter.svg" style="padding-left: 5px;" width="18" height="18" >
-      <select id="filterCenter" onchange="filterCenter(this)" style="width: 150px;">
-        <option selected value="none">None</option>
-        <option value="density">Density</option>
-        <option  value="pop">Population</option>
-        <option value="veh_reg">Vehicles Registered</option>
-      </select>
-      <span id="threshold" style="padding:0px;margin:0px;" hidden>
-      <input type="number"style="width:75px;" id="thresholdTxt" onchange="thresholdChanged(this)" step="0.001" value="0.003"/>
-      <button onclick="resetThreshold()" style="background: none!important;border: none;padding: 0!important;cursor: pointer;"><img src="Img/undo-alt.svg" width="15" height="15"></button>
-      </span>
-    </td>
-    <td>
-      <label id="standardDevLabel" style="float: left; margin: 7 20 0 20;">Standard Deviation: </label> 
+  <div id="info-box"></div>
+  <div class="header">
+    <h2 id="title">State Bridge Repair/Replacement Probabilities</h2>
+  </div>
+  <table id="menuTable">
+    <colgroup>
+      <col style="width: 25%;" />
+      <col style="width: 85%; " />
+    </colgroup>
+    <tr>
+      <td>
+        <img src="Img/filter.svg" style="padding-left: 5px;" width="18" height="18">
+        <select id="filter" onchange="filter(this)">
+          <option selected value="map">Map</option>
+          <option value="name">Name</option>
+          <option value="avg">Average</option>
+          <option value="max">Max</option>
+          <option value="threshold">Threshold</option>
+          <option value="centerValue">Center Value</option>
+        </select>
+        <img src="Img/filter.svg" style="padding-left: 5px;" width="18" height="18">
+        <select id="filterCenter" onchange="filterCenter(this)" style="width: 150px;">
+          <option selected value="none">None</option>
+          <option value="density">Density</option>
+          <option value="pop">Population</option>
+          <option value="veh_reg">Vehicles Registered</option>
+          <option value="LandArea">Land Area</option>
+
+        </select>
+        <span id="threshold" style="padding:0px;margin:0px;" hidden>
+          <input type="number" style="width:75px;" id="thresholdTxt" onchange="thresholdChanged(this)" step="0.001"
+            value="0.003" />
+          <button onclick="resetThreshold()"
+            style="background: none!important;border: none;padding: 0!important;cursor: pointer;"><img
+              src="Img/undo-alt.svg" width="15" height="15"></button>
+        </span>
+      </td>
+      <td>
+        <label id="standardDevLabel" style="float: left; margin: 7 20 0 20;">Standard Deviation: </label>
         <label for="customStandardDev">Custom</label>
-          <input type="checkbox" id="customStandardDev" onchange="customStandardDeviation(this)">
+        <input type="checkbox" id="customStandardDev" onchange="customStandardDeviation(this)">
         </label>
         <span id="standardDev" style="padding:0px;margin:0px;" hidden>
-            <div id="slider">
-              <div id="custom-handle" class="ui-slider-handle"></div>
-            </div> 
-          </span>
-          <select id="filterColor" onchange="TESTCOLOR(null)" style="width: 150px;">
-            <option selected value="d3.interpolateInferno">Inferno</option>
-            <option value="d3.interpolateBrBG">Brown/Blue/Green</option>
-            <option  value="d3.interpolateRdBu">Red/Blue</option>
-            <option value="d3.interpolateRdGy">Red/Gray</option>
-            <option value="d3.interpolateRdYlBu">Red/Yellow/Blue</option>
-            <option value="d3.interpolateSpectral">Spectral</option>
-            <option value="d3.interpolateTurbo">Turbo</option>
-            <option value="d3.interpolateViridis">Viridis</option>
-            <option value="d3.interpolateCubehelixDefault">Cube Helix</option>
-            <option value="d3.interpolateCool">Cool</option>
-          </select>
-          <input type="checkbox" onchange="TESTCOLOR(this)">Invert Color</input>
-           <label style="font-size: 9px;">Choose Color Test - Will remove</label>
-          
-    </td>
-  </tr>
-  <tr>
-    <td>
-    </td>
-  </tr>
-</table>
+          <div id="slider">
+            <div id="custom-handle" class="ui-slider-handle"></div>
+          </div>
+        </span>
+        <select id="filterColor" onchange="TESTCOLOR(null)" style="width: 150px;">
+          <option selected value="d3.interpolateInferno">Inferno</option>
+          <option value="d3.interpolateBrBG">Brown/Blue/Green</option>
+          <option value="d3.interpolateRdBu">Red/Blue</option>
+          <option value="d3.interpolateRdGy">Red/Gray</option>
+          <option value="d3.interpolateRdYlBu">Red/Yellow/Blue</option>
+          <option value="d3.interpolateSpectral">Spectral</option>
+          <option value="d3.interpolateTurbo">Turbo</option>
+          <option value="d3.interpolateViridis">Viridis</option>
+          <option value="d3.interpolateCubehelixDefault">Cube Helix</option>
+          <option value="d3.interpolateCool">Cool</option>
+        </select>
+        <input type="checkbox" onchange="TESTCOLOR(this)">Invert Color</input>
+        <label style="font-size: 9px;">Choose Color Test - Will remove</label>
 
-<svg x="0px" y="0px"  style="border:1px solid black;" id='us-map'>
-</svg>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+    </tr>
+  </table>
+
+  <svg x="0px" y="0px" style="border:1px solid black;" id='us-map'>
+  </svg>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js"
-  integrity="sha256-kzv+r6dLqmz7iYuR2OdwUgl4X5RVsoENBzigdF5cxtU=" crossorigin="anonymous"></script>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js"
+    integrity="sha256-kzv+r6dLqmz7iYuR2OdwUgl4X5RVsoENBzigdF5cxtU=" crossorigin="anonymous"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3-scale-radial.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
-<script src="https://d3js.org/d3-color.v1.min.js"></script>
-<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
-<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-<script src="js/getData.js"></script>
-<script src="js/map.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3-scale-radial.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.js"></script>
+  <script src="https://d3js.org/d3-color.v1.min.js"></script>
+  <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+  <script src="js/getData.js"></script>
+  <script src="js/map.js"></script>
 </body>
 
 </html>
