@@ -45,7 +45,7 @@ DATA.getBridgeData = function(cb)
  */
 DATA.getCenterData = function(cb)
 {
-      $.getJSON("./centerData.json", function(data)
+      $.getJSON("./mappedFields.json", function(data)
       {
         cb (data);
       });
