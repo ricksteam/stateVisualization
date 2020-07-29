@@ -122,7 +122,10 @@
       mounted() {
         this.mapSelectItems = [
           { value: "map", text: "Geographic" },
-          { value: "name", text: "Sorty by Name" },
+          { value: "name", text: "Sort by State Name" },
+          { value: "avg", text: "Sort by Average Probability" },
+          { value: "max", text: "Sort by Max Probability" },
+           
 
         ];
         this.centerSelectItems = [
@@ -148,7 +151,7 @@
           standardDevChanged(this.stdDevs);
         },
         mapFormatChanged() {
-          filter({ value: this.selectedMapFormat });
+          filter({ value: this.selectedMapFormat, text:this.mapSelectItems.find(x=>x.value==this.selectedMapFormat).text });
         },
         centerFormatChanged() {
           filterCenter({ value: this.selectedCenterFormat });

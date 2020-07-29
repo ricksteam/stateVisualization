@@ -86,6 +86,15 @@ d3.select("#us-map").append("text")
     .text("Probability")
     .attr("transform", "translate(20,55)");
 
+    d3.select("#us-map").append("text")
+    .text("State Positioning: Geographic")
+    .attr("id", "hexagon-position")
+    .attr("text-anchor", "middle")
+    .attr("transform", "translate(600,30)");
+
+
+
+
 d3.select("#us-map").append("text")
     .text("")
     .attr("id", "legendText0")
@@ -224,7 +233,7 @@ function update(data) {
         .duration(1500)
         .attr("transform", translateHexes)
 
-   
+
 
     /**
      * 
@@ -438,17 +447,8 @@ function updateData(data) {
             data[i].avg = avgEntry(data[i].entries);
         }
     }
-    if (sortType == "threshold") {
-        for (let i = 0; i < data.length; i++) {
-            data[i].threshold = thresholdEntry(data[i].entries);
-        }
-    }
-    if (sortType == "centerValue") {
-        for (let i = 0; i < data.length; i++) {
 
-            data[i].centerValue = getCenterValueEntry(data[i]);
-        }
-    }
+
 
     if (sortType == "name") {
         data = data.sort((a, b) => a.stateAbbr.localeCompare(b.stateAbbr))
@@ -471,12 +471,9 @@ function filter(select) {
     //console.log("SELECT VAL: " + select.value);
     sortType = select.value;
     viewMap = (sortType == "map");
-    if (sortType == "threshold") {
-        $("#threshold").attr("hidden", false);
-    }
-    else {
-        $("#threshold").attr("hidden", true);
-    }
+
+    d3.select("#hexagon-position").text("State Positioning: " + select.text);
+
     updateData(bridgeData);
 
 }
@@ -669,19 +666,22 @@ function UpdateCenterLegend() {
         d3.select("#us-map").select(".legend_center")
             .call(legendCenter);
 
-        let startText = app.centerSelectItems.find(x=>x.value==app.selectedCenterFormat).text;
-        let index = startText.indexOf("(");
-        if(index > -1)
-        {
-            startText = startText.substr(0, index);
-        }
+        //Get the human readable right legend name
+        let startText = app.centerSelectItems.find(x => x.value == app.selectedCenterFormat).text;
 
+        //Remove anything in parens
+        let index = startText.indexOf("(");
+        if (index > -1)
+            startText = startText.substr(0, index);
+
+        //One word per line
         let text = startText.split(" ")
 
-        for(let i = 0; i < 4; i++){
+        //Each line in its own <text>
+        for (let i = 0; i < 4; i++) {
             d3.select("#legendText" + i).text(text[i] ? text[i] : "");
         }
-        
+
     }
 
 }
