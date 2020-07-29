@@ -79,6 +79,23 @@ mapSvg = d3.select("#us-map")
     height = +mapSvg.attr("height");
 
 
+d3.select("#us-map").append("text")
+    .text("Repair")
+    .attr("transform", "translate(20,30)");
+d3.select("#us-map").append("text")
+    .text("Probability")
+    .attr("transform", "translate(20,55)");
+
+d3.select("#us-map").append("text")
+    .text("")
+    .attr("id", "legendText1")
+    .attr("transform", "translate(1200,30)");
+d3.select("#us-map").append("text")
+    .text("")
+    .attr("id", "legendText2")
+    .attr("transform", "translate(1200,55)");
+
+
 //Get Coordinates from JSON
 DATA.getCoords(function (data) {
     coordData = data;
@@ -87,22 +104,22 @@ DATA.getCoords(function (data) {
 //Get center data from JSON
 DATA.getCenterData(function (data) {
     centerData = data;
-    if(data.length > 0){
+    if (data.length > 0) {
         let anEntry = data[0];
         let keys = Object.keys(anEntry);
-        for(let i = 0; i < keys.length; i++){
+        for (let i = 0; i < keys.length; i++) {
             let key = keys[i];
-            if(key == "name" || key == "State" || key.startsWith("Material") || key.startsWith("Structure")) continue;
+            if (key == "name" || key == "State" || key.startsWith("Material") || key.startsWith("Structure")) continue;
             let readableKey = key;
             readableKey = readableKey
                 .replace(/_/g, " ") //Replace underscores with spaces
                 .split(" ")         //Split into words
-                .map(x=>x[0].toUpperCase() + x.substring(1))    //Make every word upper case, https://stackoverflow.com/q/1026069/10047920
+                .map(x => x[0].toUpperCase() + x.substring(1))    //Make every word upper case, https://stackoverflow.com/q/1026069/10047920
                 .join(" ")          //Put back into a phrase
                 .replace(/Average$/, "(State Average)")   //If the phrase ends in average, put it in parens
                 .replace(/Median$/, "(State Median)");    //If the phrase ends in median, put it in parens
 
-            app.centerSelectItems.push({value:key,text:readableKey})
+            app.centerSelectItems.push({ value: key, text: readableKey })
         }
     }
 
@@ -172,7 +189,7 @@ function update(data) {
 
     }
 
-   
+
 
     // JOIN new data with old elements.
     var g = d3.select("#us-map").selectAll(".states")
@@ -198,6 +215,8 @@ function update(data) {
         .transition()
         .duration(1500)
         .attr("transform", translateHexes)
+
+   
 
     /**
      * 
@@ -307,12 +326,14 @@ function update(data) {
         .style("font-size", 20)
         .style("fill", "white");
 
-    mapSvg.append("g")
+    d3.select("#us-map").append("g")
         .attr("class", "legend")
-        .attr("transform", "translate(20,20)");
-    mapSvg.append("g")
+        .attr("transform", "translate(20,70)");
+
+
+    d3.select("#us-map").append("g")
         .attr("class", "legend_center")
-        .attr("transform", "translate(140, 20)");
+        .attr("transform", "translate(1300, 70)");
     UpdateLegend();
 
     /**
@@ -537,16 +558,16 @@ function FillPieChart() {
 }
 function FillCenter() {
     let centerType = app.selectedCenterFormat;
-    if(centerType != "none"){
+    if (centerType != "none") {
         SetCenterColor(CenterMin[centerType], CenterMax[centerType]);
     }
 
     d3.selectAll(".center").attr("fill", function (d) {
         let ste = centerData.find(x => x.State == d.stateAbbr);
-        if(centerType == "none")
-                return "#588d8d";
+        if (centerType == "none")
+            return "#588d8d";
         else
-                return centerColor(ste[centerType]);
+            return centerColor(ste[centerType]);
     })
 }
 /**
@@ -601,10 +622,26 @@ function UpdateLegend() {
         .on("cellover", function (d) { LegendCellMouseOver(d) })
         .on("cellout", function (d) { LegendCellMouseExit(d) });
 
-    mapSvg.select(".legend")
+    d3.select("#us-map").select(".legend")
         .call(legendSequential);
 }
 function UpdateCenterLegend() {
+
+    let format = ",.4r";
+    switch (app.selectedCenterFormat) {
+        case "Year_Built_median":
+            format = ".4r";
+            break;
+        case "Year_Built_average":
+            format = ".5r";
+            break;
+        case "Deck_Condition_median":
+            format = ".1r";
+            break;
+        case "Pop":
+            format = ",.2r"
+            break;
+    }
 
     var legendCenter = d3.legendColor()
         .shapeWidth(30)
@@ -613,16 +650,19 @@ function UpdateCenterLegend() {
         .scale(centerColor)
         .cells(10)
         .labels(function ({ i, genLength, generatedLabels, labelDelimiter }) {
-            return d3.format(".2s")(generatedLabels[i])
+            return d3.format(format)(generatedLabels[i])
 
         })
     if (centerType == "none") {
-        console.log("hi")
-        mapSvg.select(".legend_center").selectAll("*").remove();
+        //console.log("hi")
+        d3.select("#us-map").select(".legend_center").selectAll("*").remove();
     }
     else {
-        mapSvg.select(".legend_center")
+        d3.select("#us-map").select(".legend_center")
             .call(legendCenter);
+
+        d3.select("#legendText1").text("Hi");
+        d3.select("#legendText2").text("Hi");
     }
 
 }
@@ -668,19 +708,19 @@ function LegendCellMouseExit() {
 */
 function SetCenterMinMax() {
 
-    if(centerData.length > 0){
+    if (centerData.length > 0) {
         CenterMax = {};
         CenterMin = {};
-        
-        Object.keys(centerData[0]).forEach(key=>{
+
+        Object.keys(centerData[0]).forEach(key => {
             CenterMax[key] = Number.NEGATIVE_INFINITY;
             CenterMin[key] = Number.POSITIVE_INFINITY;
-        })   
+        })
 
-        centerData.forEach(state=>{
-            Object.keys(state).forEach(key=>{
-                if(CenterMax[key] < +state[key]) CenterMax[key] = +state[key];
-                if(CenterMin[key] > +state[key]) CenterMin[key] = +state[key];
+        centerData.forEach(state => {
+            Object.keys(state).forEach(key => {
+                if (CenterMax[key] < +state[key]) CenterMax[key] = +state[key];
+                if (CenterMin[key] > +state[key]) CenterMin[key] = +state[key];
             })
         })
     }
