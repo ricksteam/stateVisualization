@@ -170,7 +170,7 @@ function update(data) {
      * Translates the hexes from a map postion to a list position 
      */
     function translateHexes(data, i) {
-        let listStart = { x: 350, y: 100 };
+        let listStart = { x: 300, y: 100 };
 
         let column = Math.floor(i / 9);
         let row = (i % 9);
@@ -180,7 +180,7 @@ function update(data) {
         let disY = listStart.y - coord[1];
 
         if (viewMap) {
-            return `translate(0 0)`;
+            return `translate(-50 0)`;
         }
         else {
             let offsetX = (column % 2 == 1) ? boxSize / 2 : 0;
@@ -333,7 +333,7 @@ function update(data) {
 
     d3.select("#us-map").append("g")
         .attr("class", "legend_center")
-        .attr("transform", "translate(1300, 70)");
+        .attr("transform", "translate(1200, 70)");
     UpdateLegend();
 
     /**
@@ -661,8 +661,10 @@ function UpdateCenterLegend() {
         d3.select("#us-map").select(".legend_center")
             .call(legendCenter);
 
-        d3.select("#legendText1").text("Hi");
-        d3.select("#legendText2").text("Hi");
+        let text = app.selectedCenterFormat.split("_")
+
+        d3.select("#legendText1").text(text[0]);
+        d3.select("#legendText2").text(text[1]?text[1]:"");
     }
 
 }
