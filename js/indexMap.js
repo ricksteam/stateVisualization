@@ -88,12 +88,20 @@ d3.select("#us-map").append("text")
 
 d3.select("#us-map").append("text")
     .text("")
-    .attr("id", "legendText1")
+    .attr("id", "legendText0")
     .attr("transform", "translate(1200,30)");
 d3.select("#us-map").append("text")
     .text("")
-    .attr("id", "legendText2")
+    .attr("id", "legendText1")
     .attr("transform", "translate(1200,55)");
+d3.select("#us-map").append("text")
+    .text("")
+    .attr("id", "legendText2")
+    .attr("transform", "translate(1200,80)");
+d3.select("#us-map").append("text")
+    .text("")
+    .attr("id", "legendText3")
+    .attr("transform", "translate(1200,105)");
 
 
 //Get Coordinates from JSON
@@ -333,7 +341,7 @@ function update(data) {
 
     d3.select("#us-map").append("g")
         .attr("class", "legend_center")
-        .attr("transform", "translate(1200, 70)");
+        .attr("transform", "translate(1200, 120)");
     UpdateLegend();
 
     /**
@@ -661,10 +669,19 @@ function UpdateCenterLegend() {
         d3.select("#us-map").select(".legend_center")
             .call(legendCenter);
 
-        let text = app.selectedCenterFormat.split("_")
+        let startText = app.centerSelectItems.find(x=>x.value==app.selectedCenterFormat).text;
+        let index = startText.indexOf("(");
+        if(index > -1)
+        {
+            startText = startText.substr(0, index);
+        }
 
-        d3.select("#legendText1").text(text[0]);
-        d3.select("#legendText2").text(text[1]?text[1]:"");
+        let text = startText.split(" ")
+
+        for(let i = 0; i < 4; i++){
+            d3.select("#legendText" + i).text(text[i] ? text[i] : "");
+        }
+        
     }
 
 }
