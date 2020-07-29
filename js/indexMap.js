@@ -26,16 +26,8 @@ let centerColor;
 let cellHover = {}; //data for the current cell the mouse is over
 let isHover = false;
 let CenterMin = {
-    Density: Number.POSITIVE_INFINITY,
-    Population: Number.POSITIVE_INFINITY,
-    Vehicle_Reg: Number.POSITIVE_INFINITY,
-    LandArea: Number.POSITIVE_INFINITY,
 };
 let CenterMax = {
-    Density: Number.NEGATIVE_INFINITY,
-    Population: Number.NEGATIVE_INFINITY,
-    Vehicle_Reg: Number.NEGATIVE_INFINITY,
-    LandArea: Number.NEGATIVE_INFINITY,
 };
 let legendLeniency;
 let legendCount = 20;
@@ -95,6 +87,25 @@ DATA.getCoords(function (data) {
 //Get center data from JSON
 DATA.getCenterData(function (data) {
     centerData = data;
+    if(data.length > 0){
+        let anEntry = data[0];
+        let keys = Object.keys(anEntry);
+        for(let i = 0; i < keys.length; i++){
+            let key = keys[i];
+            if(key == "name" || key == "State" || key.startsWith("Material") || key.startsWith("Structure")) continue;
+            let readableKey = key;
+            readableKey = readableKey
+                .replace(/_/g, " ") //Replace underscores with spaces
+                .split(" ")         //Split into words
+                .map(x=>x[0].toUpperCase() + x.substring(1))    //Make every word upper case, https://stackoverflow.com/q/1026069/10047920
+                .join(" ")          //Put back into a phrase
+                .replace(/Average$/, "(State Average)")   //If the phrase ends in average, put it in parens
+                .replace(/Median$/, "(State Median)");    //If the phrase ends in median, put it in parens
+
+            app.centerSelectItems.push({value:key,text:readableKey})
+        }
+    }
+
     SetCenterMinMax();
 });
 //Get Bridge data from JSON and calculate standard deviation
@@ -114,7 +125,7 @@ DATA.getBridgeData(function (newData, standardDevData) {
             for (let k = 0; k < entry.length; k++) {
                 if (entry[k] > maxValue) {
                     maxValue = entry[k];
-                    console.log(newData[i].stateAbbr + " set a new max of " + maxValue);
+                    // console.log(newData[i].stateAbbr + " set a new max of " + maxValue);
                 }
                 if (k == 0 && entry[k] > stateMax) {
                     stateMax = entry[k];
@@ -123,7 +134,7 @@ DATA.getBridgeData(function (newData, standardDevData) {
         }
         if (stateMax < minMax) {
             minMax = stateMax;
-            console.log(newData[i].stateAbbr + " set a new min max of " + minMax);
+            // console.log(newData[i].stateAbbr + " set a new min max of " + minMax);
         }
     }
     console.log("max value is " + maxValue);
@@ -428,7 +439,7 @@ function updateData(data) {
  * called from the onchange action in the sorting select element
  */
 function filter(select) {
-    console.log("SELECT VAL: " + select.value);
+    //console.log("SELECT VAL: " + select.value);
     sortType = select.value;
     viewMap = (sortType == "map");
     if (sortType == "threshold") {
@@ -447,7 +458,7 @@ function filter(select) {
  * called from the onchange action in the sorting select element
  */
 function filterCenter(select) {
-    console.log("SELECT VAL: " + select.value);
+    //console.log("SELECT VAL: " + select.value);
     centerType = select.value;
 
     updateData(bridgeData);
@@ -525,32 +536,17 @@ function FillPieChart() {
     })
 }
 function FillCenter() {
+    let centerType = app.selectedCenterFormat;
+    if(centerType != "none"){
+        SetCenterColor(CenterMin[centerType], CenterMax[centerType]);
+    }
+
     d3.selectAll(".center").attr("fill", function (d) {
         let ste = centerData.find(x => x.State == d.stateAbbr);
-        switch (centerType) {
-            case "none":
+        if(centerType == "none")
                 return "#588d8d";
-                break;
-            case "density":
-                SetCenterColor(CenterMin.Density, CenterMax.Density)
-
-                return centerColor(ste.Density)
-                break;
-            case "pop":
-                SetCenterColor(CenterMax.Population, CenterMin.Population)
-                return centerColor(ste.Pop)
-                break;
-            case "veh_reg":
-                SetCenterColor(CenterMin.Vehicle_Reg, CenterMax.Vehicle_Reg)
-                let veh_reg = (ste.trucks_registered + ste.cars_registered)
-                console.log(CenterMin.Vehicle_Reg, CenterMax.Vehicle_Reg)
-                return centerColor(veh_reg)
-                break;
-            case "LandArea":
-                SetCenterColor(CenterMin.LandArea, CenterMax.LandArea);
-                return centerColor(ste.LandArea);
-        }
-
+        else
+                return centerColor(ste[centerType]);
     })
 }
 /**
@@ -671,19 +667,38 @@ function LegendCellMouseExit() {
 * Sets min max value for center hex
 */
 function SetCenterMinMax() {
-    centerData.forEach(x => {
-        // Max
-        if (x.Density > CenterMax.Density) CenterMax.Density = x.Density;
-        if (x.Pop > CenterMax.Population) CenterMax.Population = x.Pop;
-        if ((x.trucks_registered + x.cars_registered) > CenterMax.Vehicle_Reg) CenterMax.Vehicle_Reg = (x.trucks_registered + x.cars_registered);
-        if (x.LandArea > CenterMax.LandArea) CenterMax.LandArea = x.LandArea;
-        // Min
-        if (x.Density < CenterMin.Density) CenterMin.Density = x.Density;
-        if (x.Pop < CenterMin.Population) CenterMin.Population = x.Pop;
-        if ((x.trucks_registered + x.cars_registered) < CenterMin.Vehicle_Reg) CenterMin.Vehicle_Reg = (x.trucks_registered + x.cars_registered);
-        if (x.LandArea < CenterMin.LandArea) CenterMin.LandArea = x.LandArea;
 
-    });
+    if(centerData.length > 0){
+        CenterMax = {};
+        CenterMin = {};
+        
+        Object.keys(centerData[0]).forEach(key=>{
+            CenterMax[key] = Number.NEGATIVE_INFINITY;
+            CenterMin[key] = Number.POSITIVE_INFINITY;
+        })   
+
+        centerData.forEach(state=>{
+            Object.keys(state).forEach(key=>{
+                if(CenterMax[key] < +state[key]) CenterMax[key] = +state[key];
+                if(CenterMin[key] > +state[key]) CenterMin[key] = +state[key];
+            })
+        })
+    }
+
+
+    // centerData.forEach(x => {
+    //     // Max
+    //     if (x.Density > CenterMax.Density) CenterMax.Density = x.Density;
+    //     if (x.Pop > CenterMax.Population) CenterMax.Population = x.Pop;
+    //     if ((x.trucks_registered + x.cars_registered) > CenterMax.Vehicle_Reg) CenterMax.Vehicle_Reg = (x.trucks_registered + x.cars_registered);
+    //     if (x.LandArea > CenterMax.LandArea) CenterMax.LandArea = x.LandArea;
+    //     // Min
+    //     if (x.Density < CenterMin.Density) CenterMin.Density = x.Density;
+    //     if (x.Pop < CenterMin.Population) CenterMin.Population = x.Pop;
+    //     if ((x.trucks_registered + x.cars_registered) < CenterMin.Vehicle_Reg) CenterMin.Vehicle_Reg = (x.trucks_registered + x.cars_registered);
+    //     if (x.LandArea < CenterMin.LandArea) CenterMin.LandArea = x.LandArea;
+
+    // });
 
 }
 
