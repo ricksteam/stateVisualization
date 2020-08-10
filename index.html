@@ -26,7 +26,7 @@
                 <v-container>
                   <v-row>
                     <v-col>
-                      <v-slider min="1" max="5" label="Max Repair Probability Shown in Std Dev.s" v-model="stdDevs" @change="SetPieColor(false)"
+                      <v-slider min="1" max="5" label="Max Probability in Std Dev.s" v-model="stdDevs" @change="SetPieColor(false)"
                         ticks="always" thumb-label="always">
                         </v-select>
                     </v-col>
@@ -71,9 +71,8 @@
             
             <v-col cols=12>
               <v-card>
-                <v-card-title>Map</v-card-title>
                 <v-card-text>
-                  <svg x="0px" y="0px" style="border:1px solid black;" id='us-map'>
+                  <svg id='us-map'>
                   </svg>
                 </v-card-text>
               </v-card>
@@ -113,7 +112,7 @@
       data: {
         mapSelectItems: [],
         centerSelectItems: [],
-        stdDevs: 2,
+        stdDevs: 1,
         colorSchemes: [],
         selectedMapFormat: "map",
         selectedCenterFormat: "none",

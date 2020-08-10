@@ -20,7 +20,9 @@ let coords = [];
 let mapSvg = null;
 let standardDev = 0;
 let standardDevAvg = 0;
-let standardDevMulti = 2;
+let standardDevMulti = 1;
+// let standardDevMulti = 2;
+
 let pieColor;
 let centerColor;
 let cellHover = {}; //data for the current cell the mouse is over
@@ -287,7 +289,8 @@ function update(data) {
 
     var pie = d3.pie()
         .sort(null)
-        .value(function (d) { return d; });
+        //.value(d=>d)
+        .value(1);
 
     var pieChart = gEnter
         .append("g")
@@ -523,9 +526,9 @@ function standardDevChanged(value) {
 function customStandardDeviation(check) {
     $("#standardDev").attr("hidden", !check.checked)
     if (check.checked == false) {
-        standardDevChanged(2);
-        $("#slider").slider('option', "value", 2);
-        $("#custom-handle").text("2");
+        standardDevChanged(1);
+        $("#slider").slider('option', "value", 1);
+        $("#custom-handle").text("1");
     }
 }
 
