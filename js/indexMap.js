@@ -9,8 +9,8 @@ let viewMap = true;
 let currentThreshHold = 0.003;
 //aspect ratio and balance variables
 let aspectRatio = 0;
-let viewBoxWidth = 750;
-let viewBoxHeight = 750;
+let viewBoxWidth = 1400;
+let viewBoxHeight = 600;
 let numOfBoxesPerRow = 6;
 let windowWidth = window.innerWidth;
 let windowHeight = window.innerHeight;
@@ -56,12 +56,22 @@ String.prototype.hashCode = function () {
  * Makes sure the aspect ratio remains the same during browser resize
  */
 function resize() {
-    console.log(window.innerWidth + ":" + window.innerHeight)
+    let topLeft = document.getElementById("top-left");
+    let bounds = topLeft.getBoundingClientRect()
+    let y = bounds.bottom;
+    let total = window.innerHeight;
+
+
+
+    
     windowWidth = window.innerWidth;
-    windowHeight = window.innerHeight * 0.90;
+    windowHeight = window.innerHeight-y-10;
     if (mapSvg != null) {
-        mapSvg.attr("width", windowWidth)
-            .attr("height", windowHeight)
+        mapSvg.style("width", d=>windowWidth + "px")
+            .style("height",d=> windowHeight + "px")
+            .attr("width", d=>windowWidth)
+            .attr("height", d=>windowHeight)
+            .style("top", d=>(y+2) + "px")
 
     }
 
@@ -72,13 +82,11 @@ window.addEventListener('resize', resize);
 
 //D3 Setup
 mapSvg = d3.select("#us-map")
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("width", windowWidth)
-    .attr("height", windowHeight)
+    //.attr("preserveAspectRatio", "xMinYMin meet")
     .attr("viewBox", `0 0 ${viewBoxWidth} ${viewBoxHeight}`)
     .attr("class", "svg_content"),
-    width = +mapSvg.attr("width"),
-    height = +mapSvg.attr("height");
+    width = +mapSvg.style("width"),
+    height = +mapSvg.style("height");
 
 
 d3.select("#us-map").append("text")
@@ -618,7 +626,7 @@ function SetPieColor(sel) {
  */
 
 function SetCenterColor(min, max, flip=false) {
-    let one = "#40ff40";
+    let one = "#40dd40";
     let two = "#ff4040";
     let a = flip? two : one;
     let b = flip ? one : two;

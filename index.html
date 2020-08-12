@@ -2,7 +2,6 @@
 
 <head>
   <link rel="shortcut icon" type="image/png" href="favicon/favicon.png" />
-  <link rel="stylesheet" type="text/css" href="css/map.css" />
   <link rel="stylesheet" type="text/css" href="css/fontawesome.min.css" />
   <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
@@ -21,7 +20,7 @@
         <v-container fluid>
           <v-row>
             <v-col>
-              <v-card>
+              <v-card id="top-left">
                 <v-card-title>Repair Probability Coloring</v-card-title>
                 <v-container>
                   <v-row>
@@ -72,22 +71,15 @@
                 </v-container>
               </v-card>
             </v-col>
-
-            <v-col cols=12>
-              <v-card>
-                <v-card-text>
-                  <svg id='us-map'>
-                  </svg>
-                </v-card-text>
-              </v-card>
-            </v-col>
           </v-row>
-
 
         </v-container>
       </V-main>
     </v-app>
   </div>
+  <svg id='us-map' style="position:absolute;left:0px">
+  </svg>
+
 
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js"
@@ -123,7 +115,7 @@
         selectedColorScheme: "d3.interpolateInferno",
         missingInfoStates: ["AK", "HI"],
         missingInfoTypes: ["Precipitation", "Freeze_Thaw_Cycles", "Snowfall"],
-        flippedCenterTypes:["Year_Built_average", "Year_Built_median", "Deck_Condition_average", "Deck_Condition_median"],
+        flippedCenterTypes: ["Year_Built_average", "Year_Built_median", "Deck_Condition_average", "Deck_Condition_median"],
       },
       mounted() {
         this.mapSelectItems = [
@@ -151,8 +143,11 @@
           { value: "d3.interpolateCubehelixDefault", text: "Cube Helix" },
           { value: "d3.interpolateCool", text: "Cool" },
         ];
+        this.resize();
+
       },
       methods: {
+        resize:resize,
         SetPieColor(flag) {
           standardDevChanged(this.stdDevs);
         },
