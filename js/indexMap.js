@@ -429,6 +429,8 @@ function getCenterValueEntry(entry) {
             return (ste.trucks_registered + ste.cars_registered)
         case "LandArea":
             return ste.LandArea;
+        case "Precipipation":
+            return ste.Precipitation;
     }
 
 }
@@ -748,19 +750,7 @@ function SetCenterMinMax() {
     }
 
 
-    // centerData.forEach(x => {
-    //     // Max
-    //     if (x.Density > CenterMax.Density) CenterMax.Density = x.Density;
-    //     if (x.Pop > CenterMax.Population) CenterMax.Population = x.Pop;
-    //     if ((x.trucks_registered + x.cars_registered) > CenterMax.Vehicle_Reg) CenterMax.Vehicle_Reg = (x.trucks_registered + x.cars_registered);
-    //     if (x.LandArea > CenterMax.LandArea) CenterMax.LandArea = x.LandArea;
-    //     // Min
-    //     if (x.Density < CenterMin.Density) CenterMin.Density = x.Density;
-    //     if (x.Pop < CenterMin.Population) CenterMin.Population = x.Pop;
-    //     if ((x.trucks_registered + x.cars_registered) < CenterMin.Vehicle_Reg) CenterMin.Vehicle_Reg = (x.trucks_registered + x.cars_registered);
-    //     if (x.LandArea < CenterMin.LandArea) CenterMin.LandArea = x.LandArea;
-
-    // });
+    
 
 }
 
