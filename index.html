@@ -26,14 +26,15 @@
                 <v-container>
                   <v-row>
                     <v-col>
-                      <v-slider min="1" max="5" label="Max Probability in Std Dev.s" v-model="stdDevs" @change="SetPieColor(false)"
-                        ticks="always" thumb-label="always">
+                      <v-slider min="1" max="5" label="Max Probability in Std Dev.s" v-model="stdDevs"
+                        @change="SetPieColor(false)" ticks="always" thumb-label="always">
                         </v-select>
                     </v-col>
-                    </v-row>
-                    <v-row>
+                  </v-row>
+                  <v-row>
                     <v-col>
-                      <v-select :items="colorSchemes" label="Color Scheme" v-model="selectedColorScheme" @change="selectColorScheme()"></v-select>
+                      <v-select :items="colorSchemes" label="Color Scheme" v-model="selectedColorScheme"
+                        @change="selectColorScheme()"></v-select>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -60,15 +61,18 @@
                 <v-container>
                   <v-row>
 
-                    <v-col>
+                    <v-col cols=12>
                       <v-select :items="centerSelectItems" label="Center Coloring" v-model="selectedCenterFormat"
                         @change="centerFormatChanged()"></v-select>
+                    </v-col>
+                    <v-col cols=12 class="text-subtitle-1">
+                      {{missingWarning()}}
                     </v-col>
                   </v-row>
                 </v-container>
               </v-card>
             </v-col>
-            
+
             <v-col cols=12>
               <v-card>
                 <v-card-text>
@@ -117,6 +121,9 @@
         selectedMapFormat: "map",
         selectedCenterFormat: "none",
         selectedColorScheme: "d3.interpolateInferno",
+        missingInfoStates: ["AK", "HI"],
+        missingInfoTypes: ["Precipitation", "Freeze_Thaw_Cycles", "Snowfall"],
+        flippedCenterTypes:["Year_Built_average", "Year_Built_median", "Deck_Condition_average", "Deck_Condition_median"],
       },
       mounted() {
         this.mapSelectItems = [
@@ -124,12 +131,12 @@
           { value: "name", text: "Sort by State Name" },
           { value: "avg", text: "Sort by Average Probability" },
           { value: "max", text: "Sort by Max Probability" },
-           
+
 
         ];
         this.centerSelectItems = [
           { value: "none", text: "None" },
-          
+
         ];
 
         this.colorSchemes = [
@@ -150,13 +157,20 @@
           standardDevChanged(this.stdDevs);
         },
         mapFormatChanged() {
-          filter({ value: this.selectedMapFormat, text:this.mapSelectItems.find(x=>x.value==this.selectedMapFormat).text });
+          filter({ value: this.selectedMapFormat, text: this.mapSelectItems.find(x => x.value == this.selectedMapFormat).text });
         },
         centerFormatChanged() {
+          console.log(this.selectedCenterFormat);
           filterCenter({ value: this.selectedCenterFormat });
         },
-        selectColorScheme(){
+        selectColorScheme() {
           TESTCOLOR(null);
+        },
+        missingWarning() {
+          if (this.missingInfoTypes.includes(this.selectedCenterFormat)) {
+            return `Note that ${this.selectedCenterFormat.replace(/_/g, " ")} data in unavailable for ${this.missingInfoStates.join(" & ")}.`;
+          }
+          return "";
         }
       },
     });

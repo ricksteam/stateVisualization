@@ -88,7 +88,7 @@ d3.select("#us-map").append("text")
     .text("Probability")
     .attr("transform", "translate(20,55)");
 
-    d3.select("#us-map").append("text")
+d3.select("#us-map").append("text")
     .text("State Positioning: Geographic")
     .attr("id", "hexagon-position")
     .attr("text-anchor", "middle")
@@ -181,6 +181,10 @@ DATA.getBridgeData(function (newData, standardDevData) {
 
 
 function update(data) {
+
+    if(app.missingInfoTypes.includes(app.selectedCenterFormat)){
+        data = data.filter(x=>!app.missingInfoStates.includes(x.stateAbbr))
+    }
 
     /**
      * translateHexes
@@ -550,9 +554,11 @@ function ChangeStandardDevLabelValue() {
  */
 function FillPieChart() {
     d3.selectAll(".slice").attr("fill", function (d) {
+        if (app.missingInfoStates.includes(d.stateAbbr) && app.missingInfoTypes.includes(app.selectedCenterFormat))
+            return "#FFFFFF";
+
         if (isHover) {
-            if (pieColor(d.data) == "#fcffa4") console.log(d)
-            if (d.data <= cellHover.value + legendLeniency && d.data >= cellHover.value - legendLeniency) {
+           if (d.data <= cellHover.value + legendLeniency && d.data >= cellHover.value - legendLeniency) {
                 return pieColor(d.data);
             }
 
@@ -569,11 +575,16 @@ function FillPieChart() {
 function FillCenter() {
     let centerType = app.selectedCenterFormat;
     if (centerType != "none") {
-        SetCenterColor(CenterMin[centerType], CenterMax[centerType]);
+
+        SetCenterColor(CenterMin[centerType], CenterMax[centerType], app.flippedCenterTypes.includes(centerType));
     }
+
+
 
     d3.selectAll(".center").attr("fill", function (d) {
         let ste = centerData.find(x => x.State == d.stateAbbr);
+        if (app.missingInfoStates.includes(d.stateAbbr) && app.missingInfoTypes.includes(centerType))
+            return "#999999";
         if (centerType == "none")
             return "#588d8d";
         else
@@ -589,6 +600,7 @@ function SetPieColor(sel) {
     //let inter = eval($("#filterColor option:selected").val())
     //eval($("#filterColor option:selected").val())
     let inter = eval(app.selectedColorScheme)
+    sel = true;
     let dom = (sel ? [snd, 0] : [0, snd])
     console.log(dom);
     pieColor = d3.scaleSequential()
@@ -604,12 +616,20 @@ function SetPieColor(sel) {
 /**
  * Sets the global variable centerColor based on the centerType
  */
-function SetCenterColor(min, max) {
+
+function SetCenterColor(min, max, flip=false) {
+    let one = "#40ff40";
+    let two = "#ff4040";
+    let a = flip? two : one;
+    let b = flip ? one : two;
     centerColor = d3.scaleLinear()
         .domain([min, max])
-        .range(["#00afff", "#ff1400"]);
+        //.range(["#00afff", "#ff1400"]);
+        .range([a, b]);
     UpdateCenterLegend();
 }
+
+
 
 /**
  * UpdateLegend
@@ -750,7 +770,7 @@ function SetCenterMinMax() {
     }
 
 
-    
+
 
 }
 

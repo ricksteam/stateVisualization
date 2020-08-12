@@ -1,4 +1,4 @@
-State,Density,Pop,LandArea,cars_registered,trucks_registered,Precipitation,Freeze,Snowfall
+State,Density,Pop,LandArea,cars_registered,trucks_registered,Precipitation,Freeze_Thaw_Cycles,Snowfall
 AL,96.7173,4898246,50645,2065463,2872743.275,3.81,45.20879413,8.190850288
 AK,1.2893,735720,570641,173487,591079.2184,0,81,53.4
 AZ,64.0445,7275070,113594,2391624,3399703.687,0.86,34.63500495,7.436029897

@@ -7,7 +7,7 @@
     "cars_registered": "2065463",
     "trucks_registered": "2872743.275",
     "Precipitation": "3.81",
-    "Freeze": "45.20879413",
+    "Freeze_Thaw_Cycles": "45.20879413",
     "Snowfall": "8.190850288"
   },
   {
@@ -18,7 +18,7 @@
     "cars_registered": "173487",
     "trucks_registered": "591079.2184",
     "Precipitation": "0",
-    "Freeze": "81",
+    "Freeze_Thaw_Cycles": "81",
     "Snowfall": "53.4"
   },
   {
@@ -29,7 +29,7 @@
     "cars_registered": "2391624",
     "trucks_registered": "3399703.687",
     "Precipitation": "0.86",
-    "Freeze": "34.63500495",
+    "Freeze_Thaw_Cycles": "34.63500495",
     "Snowfall": "7.436029897"
   },
   {
@@ -40,7 +40,7 @@
     "cars_registered": "926789",
     "trucks_registered": "1805509.597",
     "Precipitation": "3.48",
-    "Freeze": "63.00048782",
+    "Freeze_Thaw_Cycles": "63.00048782",
     "Snowfall": "17.8766669"
   },
   {
@@ -51,7 +51,7 @@
     "cars_registered": "14860967",
     "trucks_registered": "14991713.53",
     "Precipitation": "1.58",
-    "Freeze": "17.18913649",
+    "Freeze_Thaw_Cycles": "17.18913649",
     "Snowfall": "13.07886502"
   },
   {
@@ -62,7 +62,7 @@
     "cars_registered": "1785058",
     "trucks_registered": "3271595.227",
     "Precipitation": "1.3",
-    "Freeze": "137.9581056",
+    "Freeze_Thaw_Cycles": "137.9581056",
     "Snowfall": "73.95295474"
   },
   {
@@ -73,7 +73,7 @@
     "cars_registered": "1302339",
     "trucks_registered": "1422502.027",
     "Precipitation": "3.44",
-    "Freeze": "91.81561075",
+    "Freeze_Thaw_Cycles": "91.81561075",
     "Snowfall": "54.23710711"
   },
   {
@@ -84,7 +84,7 @@
     "cars_registered": "419199",
     "trucks_registered": "519961.3927",
     "Precipitation": "3.1",
-    "Freeze": "77.25013722",
+    "Freeze_Thaw_Cycles": "77.25013722",
     "Snowfall": "28.1000183"
   },
   {
@@ -95,7 +95,7 @@
     "cars_registered": "208141",
     "trucks_registered": "128699.966",
     "Precipitation": "3.02",
-    "Freeze": "81.11906816",
+    "Freeze_Thaw_Cycles": "81.11906816",
     "Snowfall": "29.02329594"
   },
   {
@@ -106,7 +106,7 @@
     "cars_registered": "7778493",
     "trucks_registered": "8534913.248",
     "Precipitation": "3.67",
-    "Freeze": "5.564338097",
+    "Freeze_Thaw_Cycles": "5.564338097",
     "Snowfall": "0.315281806"
   },
   {
@@ -117,7 +117,7 @@
     "cars_registered": "3536055",
     "trucks_registered": "4665930.197",
     "Precipitation": "3.39",
-    "Freeze": "43.04102392",
+    "Freeze_Thaw_Cycles": "43.04102392",
     "Snowfall": "7.376503594"
   },
   {
@@ -128,7 +128,7 @@
     "cars_registered": "512386",
     "trucks_registered": "708545.8841",
     "Precipitation": "0",
-    "Freeze": "81",
+    "Freeze_Thaw_Cycles": "81",
     "Snowfall": "53.4"
   },
   {
@@ -139,7 +139,7 @@
     "cars_registered": "550006",
     "trucks_registered": "1218729.627",
     "Precipitation": "1.68",
-    "Freeze": "118.8401416",
+    "Freeze_Thaw_Cycles": "118.8401416",
     "Snowfall": "106.4504198"
   },
   {
@@ -150,7 +150,7 @@
     "cars_registered": "4655844",
     "trucks_registered": "5866613.923",
     "Precipitation": "2.76",
-    "Freeze": "89.99398648",
+    "Freeze_Thaw_Cycles": "89.99398648",
     "Snowfall": "56.13171049"
   },
   {
@@ -161,7 +161,7 @@
     "cars_registered": "2261440",
     "trucks_registered": "3637290.375",
     "Precipitation": "2.97",
-    "Freeze": "90.19727288",
+    "Freeze_Thaw_Cycles": "90.19727288",
     "Snowfall": "58.88593443"
   },
   {
@@ -172,7 +172,7 @@
     "cars_registered": "1268996",
     "trucks_registered": "2277193.983",
     "Precipitation": "2.38",
-    "Freeze": "95.65483862",
+    "Freeze_Thaw_Cycles": "95.65483862",
     "Snowfall": "73.04925686"
   },
   {
@@ -183,7 +183,7 @@
     "cars_registered": "987259",
     "trucks_registered": "1628493.666",
     "Precipitation": "2.05",
-    "Freeze": "94.56741526",
+    "Freeze_Thaw_Cycles": "94.56741526",
     "Snowfall": "38.76296768"
   },
   {
@@ -194,7 +194,7 @@
     "cars_registered": "1691085",
     "trucks_registered": "2490197.505",
     "Precipitation": "3.34",
-    "Freeze": "84.07771822",
+    "Freeze_Thaw_Cycles": "84.07771822",
     "Snowfall": "39.01185731"
   },
   {
@@ -205,7 +205,7 @@
     "cars_registered": "1389436",
     "trucks_registered": "2374552.402",
     "Precipitation": "4.02",
-    "Freeze": "22.18402852",
+    "Freeze_Thaw_Cycles": "22.18402852",
     "Snowfall": "3.924410615"
   },
   {
@@ -216,7 +216,7 @@
     "cars_registered": "387233",
     "trucks_registered": "651349.3642",
     "Precipitation": "3.12",
-    "Freeze": "86.74734845",
+    "Freeze_Thaw_Cycles": "86.74734845",
     "Snowfall": "88.11497071"
   },
   {
@@ -227,7 +227,7 @@
     "cars_registered": "2006904",
     "trucks_registered": "2209445.212",
     "Precipitation": "3.08",
-    "Freeze": "84.88740783",
+    "Freeze_Thaw_Cycles": "84.88740783",
     "Snowfall": "35.78353285"
   },
   {
@@ -238,7 +238,7 @@
     "cars_registered": "2208468",
     "trucks_registered": "2674324.285",
     "Precipitation": "3.36",
-    "Freeze": "91.06547913",
+    "Freeze_Thaw_Cycles": "91.06547913",
     "Snowfall": "64.58213655"
   },
   {
@@ -249,7 +249,7 @@
     "cars_registered": "3257473",
     "trucks_registered": "4993400.461",
     "Precipitation": "2.32",
-    "Freeze": "85.53423824",
+    "Freeze_Thaw_Cycles": "85.53423824",
     "Snowfall": "95.44232793"
   },
   {
@@ -260,7 +260,7 @@
     "cars_registered": "2146187",
     "trucks_registered": "3274929.561",
     "Precipitation": "1.89",
-    "Freeze": "86.44650738",
+    "Freeze_Thaw_Cycles": "86.44650738",
     "Snowfall": "99.21290057"
   },
   {
@@ -271,7 +271,7 @@
     "cars_registered": "822864",
     "trucks_registered": "1198469.571",
     "Precipitation": "3.95",
-    "Freeze": "41.6931135",
+    "Freeze_Thaw_Cycles": "41.6931135",
     "Snowfall": "8.004239509"
   },
   {
@@ -282,7 +282,7 @@
     "cars_registered": "2141050",
     "trucks_registered": "3262212.05",
     "Precipitation": "3",
-    "Freeze": "89.43500069",
+    "Freeze_Thaw_Cycles": "89.43500069",
     "Snowfall": "43.60330064"
   },
   {
@@ -293,7 +293,7 @@
     "cars_registered": "441392",
     "trucks_registered": "1111168.745",
     "Precipitation": "1.29",
-    "Freeze": "124.3357292",
+    "Freeze_Thaw_Cycles": "124.3357292",
     "Snowfall": "120.6477621"
   },
   {
@@ -304,7 +304,7 @@
     "cars_registered": "677040",
     "trucks_registered": "1218764.637",
     "Precipitation": "1.68",
-    "Freeze": "106.3331367",
+    "Freeze_Thaw_Cycles": "106.3331367",
     "Snowfall": "57.05459296"
   },
   {
@@ -315,7 +315,7 @@
     "cars_registered": "1047508",
     "trucks_registered": "1328704.272",
     "Precipitation": "0.71",
-    "Freeze": "80.09582894",
+    "Freeze_Thaw_Cycles": "80.09582894",
     "Snowfall": "34.89246614"
   },
   {
@@ -326,7 +326,7 @@
     "cars_registered": "505381",
     "trucks_registered": "732066.647",
     "Precipitation": "3.25",
-    "Freeze": "91.5943141",
+    "Freeze_Thaw_Cycles": "91.5943141",
     "Snowfall": "95.38369267"
   },
   {
@@ -337,7 +337,7 @@
     "cars_registered": "2798699",
     "trucks_registered": "3080935.74",
     "Precipitation": "3.29",
-    "Freeze": "89.01935323",
+    "Freeze_Thaw_Cycles": "89.01935323",
     "Snowfall": "42.44318137"
   },
   {
@@ -348,7 +348,7 @@
     "cars_registered": "609494",
     "trucks_registered": "1066511.825",
     "Precipitation": "1.01",
-    "Freeze": "116.4344764",
+    "Freeze_Thaw_Cycles": "116.4344764",
     "Snowfall": "33.17636633"
   },
   {
@@ -359,7 +359,7 @@
     "cars_registered": "4563035",
     "trucks_registered": "5821795.712",
     "Precipitation": "2.98",
-    "Freeze": "90.50374059",
+    "Freeze_Thaw_Cycles": "90.50374059",
     "Snowfall": "95.90109013"
   },
   {
@@ -370,7 +370,7 @@
     "cars_registered": "3317918",
     "trucks_registered": "4531463.42",
     "Precipitation": "3.35",
-    "Freeze": "70.22621043",
+    "Freeze_Thaw_Cycles": "70.22621043",
     "Snowfall": "21.31883817"
   },
   {
@@ -381,7 +381,7 @@
     "cars_registered": "276545",
     "trucks_registered": "724941.4319",
     "Precipitation": "1.28",
-    "Freeze": "93.5253062",
+    "Freeze_Thaw_Cycles": "93.5253062",
     "Snowfall": "101.6574232"
   },
   {
@@ -392,7 +392,7 @@
     "cars_registered": "4605459",
     "trucks_registered": "5752346.189",
     "Precipitation": "2.71",
-    "Freeze": "91.56838806",
+    "Freeze_Thaw_Cycles": "91.56838806",
     "Snowfall": "69.11462327"
   },
   {
@@ -403,7 +403,7 @@
     "cars_registered": "1337624",
     "trucks_registered": "2267209.469",
     "Precipitation": "2.49",
-    "Freeze": "70.07564665",
+    "Freeze_Thaw_Cycles": "70.07564665",
     "Snowfall": "20.97478407"
   },
   {
@@ -414,7 +414,7 @@
     "cars_registered": "1542461",
     "trucks_registered": "2400560.6",
     "Precipitation": "2.24",
-    "Freeze": "69.78931234",
+    "Freeze_Thaw_Cycles": "69.78931234",
     "Snowfall": "56.83522009"
   },
   {
@@ -425,7 +425,7 @@
     "cars_registered": "4463267",
     "trucks_registered": "5792845.749",
     "Precipitation": "2.98",
-    "Freeze": "97.70141251",
+    "Freeze_Thaw_Cycles": "97.70141251",
     "Snowfall": "74.2019751"
   },
   {
@@ -436,7 +436,7 @@
     "cars_registered": "420313",
     "trucks_registered": "419313.782",
     "Precipitation": "3.44",
-    "Freeze": "85.32304318",
+    "Freeze_Thaw_Cycles": "85.32304318",
     "Snowfall": "45.3011471"
   },
   {
@@ -447,7 +447,7 @@
     "cars_registered": "1808401",
     "trucks_registered": "2459838.614",
     "Precipitation": "3.28",
-    "Freeze": "47.69795614",
+    "Freeze_Thaw_Cycles": "47.69795614",
     "Snowfall": "10.04246328"
   },
   {
@@ -458,7 +458,7 @@
     "cars_registered": "353180",
     "trucks_registered": "785101.4636",
     "Precipitation": "1.42",
-    "Freeze": "105.8140748",
+    "Freeze_Thaw_Cycles": "105.8140748",
     "Snowfall": "79.17195772"
   },
   {
@@ -469,7 +469,7 @@
     "cars_registered": "2325004",
     "trucks_registered": "3280359.426",
     "Precipitation": "3.55",
-    "Freeze": "72.99662053",
+    "Freeze_Thaw_Cycles": "72.99662053",
     "Snowfall": "27.34074487"
   },
   {
@@ -480,7 +480,7 @@
     "cars_registered": "8176879",
     "trucks_registered": "13522053",
     "Precipitation": "1.94",
-    "Freeze": "28.25430074",
+    "Freeze_Thaw_Cycles": "28.25430074",
     "Snowfall": "6.852890775"
   },
   {
@@ -491,7 +491,7 @@
     "cars_registered": "925052",
     "trucks_registered": "1340619.059",
     "Precipitation": "0.97",
-    "Freeze": "124.0449407",
+    "Freeze_Thaw_Cycles": "124.0449407",
     "Snowfall": "77.41046266"
   },
   {
@@ -502,7 +502,7 @@
     "cars_registered": "221936",
     "trucks_registered": "367647.066",
     "Precipitation": "3.15",
-    "Freeze": "90.36694115",
+    "Freeze_Thaw_Cycles": "90.36694115",
     "Snowfall": "120.5008443"
   },
   {
@@ -513,7 +513,7 @@
     "cars_registered": "3251339",
     "trucks_registered": "4034926.127",
     "Precipitation": "3.03",
-    "Freeze": "86.97010845",
+    "Freeze_Thaw_Cycles": "86.97010845",
     "Snowfall": "33.61014144"
   },
   {
@@ -524,7 +524,7 @@
     "cars_registered": "2925765",
     "trucks_registered": "4075464.371",
     "Precipitation": "2.91",
-    "Freeze": "75.30189471",
+    "Freeze_Thaw_Cycles": "75.30189471",
     "Snowfall": "74.70942101"
   },
   {
@@ -535,7 +535,7 @@
     "cars_registered": "562984",
     "trucks_registered": "1064328.921",
     "Precipitation": "3.08",
-    "Freeze": "93.47183711",
+    "Freeze_Thaw_Cycles": "93.47183711",
     "Snowfall": "66.21268851"
   },
   {
@@ -546,7 +546,7 @@
     "cars_registered": "2092584",
     "trucks_registered": "3163814.336",
     "Precipitation": "2.31",
-    "Freeze": "86.46085183",
+    "Freeze_Thaw_Cycles": "86.46085183",
     "Snowfall": "96.70706463"
   },
   {
@@ -557,7 +557,7 @@
     "cars_registered": "193523",
     "trucks_registered": "592554.9635",
     "Precipitation": "1.14",
-    "Freeze": "133.9993744",
+    "Freeze_Thaw_Cycles": "133.9993744",
     "Snowfall": "106.2012697"
   }
 ]
