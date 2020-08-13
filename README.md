@@ -1,5 +1,5 @@
 # State Visualization
-Heatmap visualization of state-level bridge health repair data based on the National Bridge Inventory database. The table of actuarial results can be found in the [tableGenerator directory](./tableGenerator/csv.csv).
+Heatmap visualization of state-level bridge health repair data based on the National Bridge Inventory database. The table of actuarial results can be found in the [tableGenerator directory](./tableGenerator/repairProbabilities.csv).
 
 ## Live Demo
 You can see a live demo of this code at [here](https://bit.ly/hexbridges).
