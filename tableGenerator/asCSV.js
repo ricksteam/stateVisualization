@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 
-const data = JSON.parse(fs.readFileSync('./state.json', 'utf-8'));
+const data = JSON.parse(fs.readFileSync('../state.json', 'utf-8'));
 
 let csvString = "State,";
 for (let i = 1; i <= 96; i++) {
@@ -56,7 +56,7 @@ latexString +=
 
 
 let latexOut = [];
-let tablePages = 4;
+let tablePages = 5;
 
 for (let i = 0; i < tablePages; i++) {
 
@@ -66,26 +66,27 @@ for (let i = 0; i < tablePages; i++) {
     let midStringTranspose = "";
     let headerStringTranspose = "";
     for (let i = start; i < end; i++) {
-        midStringTranspose += "|c ";
+        midStringTranspose += "c ";
         headerStringTranspose += "& \\textbf{" + data[i].stateAbbr + "}"
     }
-    midStringTranspose += "|c|";
+    midStringTranspose += "|";
 
     let latexStringTranspose = `
 \\begin{table*}[htb]
 \\footnotesize
     \\centering
-    \\begin{tabular}{|c ${midStringTranspose}}\\hline
-        \\textbf{State} ${headerStringTranspose} \\\\\\hline
+    \\begin{tabular}{|c| ${midStringTranspose}}\\hline
+        \\textbf{Years} ${headerStringTranspose} \\\\\\hline
     `;
 
    
 
     for (let i = 0; i < 96; i+=2) {
-        latexStringTranspose += "" + (i + 1) + "&";
+        latexStringTranspose += "" + (i + 1) + "/" + (i + 2) + "&";
         for (let s = start; s < end; s++) {
-            let proposed =  ((data[s].entries[i][0])*100).toFixed(3)
-            latexStringTranspose += proposed == 0 ? "0" : proposed;
+            let proposed =  ((data[s].entries[i][0])*100).toFixed(1)
+            let proposed2 = ((data[s].entries[i+1][0])*100).toFixed(1)
+            latexStringTranspose += (proposed == 0 ? "0" : proposed)  + "/" + (proposed2 == 0 ? "0" : proposed2);
             if(s != end -1)
             latexStringTranspose += "& "
         }
@@ -96,8 +97,8 @@ for (let i = 0; i < tablePages; i++) {
     latexStringTranspose +=
         `
     \\end{tabular}
-    \\caption{Overview of the actuarial functions used.}
-    \\label{table:probabilityItems}
+    \\caption{Bridge repair or replacement probabilities (percentages) by bridge age, ${data[start].stateAbbr} to ${data[end-1].stateAbbr}.}
+    \\label{table:states${i}}
 \\end{table*}
     `;
     latexOut.push(latexStringTranspose)
