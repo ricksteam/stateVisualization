@@ -7,8 +7,8 @@ const data = JSON.parse(fs.readFileSync('../state.json', 'utf-8'));
 let csvString = "State,";
 for (let i = 1; i <= 96; i++) {
     csvString += "" + i;
-    if(i!=96)
-    i += ","
+    if (i != 96)
+        csvString += ","
 }
 csvString += "\n";
 
@@ -81,16 +81,16 @@ for (let i = 0; i < tablePages; i++) {
         \\textbf{Years} ${headerStringTranspose} \\\\\\hline
     `;
 
-   
 
-    for (let i = 0; i < 96; i+=2) {
+
+    for (let i = 0; i < 96; i += 2) {
         latexStringTranspose += "" + (i + 1) + "/" + (i + 2) + "&";
         for (let s = start; s < end; s++) {
-            let proposed =  ((data[s].entries[i][0])*100).toFixed(1)
-            let proposed2 = ((data[s].entries[i+1][0])*100).toFixed(1)
-            latexStringTranspose += (proposed == 0 ? "0" : proposed)  + "/" + (proposed2 == 0 ? "0" : proposed2);
-            if(s != end -1)
-            latexStringTranspose += "& "
+            let proposed = ((data[s].entries[i][0]) * 100).toFixed(1)
+            let proposed2 = ((data[s].entries[i + 1][0]) * 100).toFixed(1)
+            latexStringTranspose += (proposed == 0 ? "0" : proposed) + "/" + (proposed2 == 0 ? "0" : proposed2);
+            if (s != end - 1)
+                latexStringTranspose += "& "
         }
         latexStringTranspose += "\\\\\\hline";
         latexStringTranspose += "\n";
@@ -99,7 +99,7 @@ for (let i = 0; i < tablePages; i++) {
     latexStringTranspose +=
         `
     \\end{tabular}
-    \\caption{Bridge repair or replacement probabilities (percentages) by bridge age, ${data[start].stateAbbr} to ${data[end-1].stateAbbr}.}
+    \\caption{Bridge repair or replacement probabilities (percentages) by bridge age, ${data[start].stateAbbr} to ${data[end - 1].stateAbbr}.}
     \\label{table:states${i}}
 \\end{table*}
     `;
@@ -112,4 +112,4 @@ for (let i = 0; i < tablePages; i++) {
 
 fs.writeFileSync('repairProbabilities.csv', csvString);
 fs.writeFileSync('repairProbabilities.tex', latexString);
- fs.writeFileSync(`repairProbabilitiesTranspose.tex`, latexOut.join("\n"));
+fs.writeFileSync(`repairProbabilitiesTranspose.tex`, latexOut.join("\n"));
