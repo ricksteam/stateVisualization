@@ -1,8 +1,8 @@
 # State Visualization
-Heatmap visualization of state-level bridge health repair data based on the National Bridge Inventory database. 
+Heatmap visualization of state-level bridge health repair data based on the National Bridge Inventory database. The table of actuarial results can be found in the [tableGenerator directory](./tableGenerator/csv.csv).
 
 ## Live Demo
-You can see a live demo of this code at [here](https://bit.ly/hexstates).
+You can see a live demo of this code at [here](https://bit.ly/hexbridges).
 
 ## About
 This project is the result of a collaboration between the [University of Nebraska at Omaha](https://unomaha.edu) and the [University of Nebraska Lincoln](https://unl.edu). Using actuarial science to analyse [National Bridge Inventory](https://www.fhwa.dot.gov/bridge/nbi.cfm) database information, we create "life expectancy" tables for bridges in each state. This repository holds the code to visualize these tables as interactive heatmaps.
