@@ -6,7 +6,9 @@ const data = JSON.parse(fs.readFileSync('../state.json', 'utf-8'));
 
 let csvString = "State,";
 for (let i = 1; i <= 96; i++) {
-    csvString += "" + i + ","
+    csvString += "" + i;
+    if(i!=96)
+    i += ","
 }
 csvString += "\n";
 
