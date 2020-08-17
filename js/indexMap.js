@@ -584,7 +584,7 @@ function FillCenter() {
     let centerType = app.selectedCenterFormat;
     if (centerType != "none") {
 
-        SetCenterColor(CenterMin[centerType], CenterMax[centerType], app.flippedCenterTypes.includes(centerType));
+        SetCenterColor( CenterMax[centerType], CenterMin[centerType],app.flippedCenterTypes.includes(centerType));
     }
 
 
@@ -626,8 +626,8 @@ function SetPieColor(sel) {
  */
 
 function SetCenterColor(min, max, flip=false) {
-    let one = "#40dd40";
-    let two = "#ff4040";
+    let one = "#ff4040";
+    let two = "#40dd40";
     let a = flip? two : one;
     let b = flip ? one : two;
     centerColor = d3.scaleLinear()
